@@ -166,13 +166,13 @@ export default function ProductCard({ product, isAuthenticated, viewMode = "grid
           <div className="w-1/3 relative">
             <div className="aspect-square relative">
               {product.images?.length > 0 ? (
-                <Image
+                <img
                   src={product.images[0]}
                   alt={product.name || "Product image"}
-                  fill
+                  // fill
                   sizes="(max-width: 768px) 33vw, 25vw"
                   className="object-contain p-4"
-                  priority={false}
+                  // priority={false}
                 />
               ) : (
                 <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -360,13 +360,13 @@ export default function ProductCard({ product, isAuthenticated, viewMode = "grid
         <div className="aspect-square relative bg-white">
           <div className="absolute inset-0 p-4 flex items-center justify-center">
             {product.images?.length > 0 ? (
-              <Image
+              <img
                 src={product.images[0]}
                 alt={product.name || "Product image"}
-                fill
+                // fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className={`object-contain transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
-                priority={false}
+                // priority={false}
               />
             ) : (
               <div className="w-full h-full bg-gray-100 flex items-center justify-center">

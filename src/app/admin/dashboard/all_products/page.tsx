@@ -271,157 +271,336 @@ const ProductManagementPage = () => {
     setImageUrls(newUrls);
   };
   
-  // Submit handler for add product
-  const handleAddSubmit = async (data) => {
-    setIsSubmitting(true);
+  // // Submit handler for add product
+  // const handleAddSubmit = async (data) => {
+  //   setIsSubmitting(true);
     
-    try {
-      // First, upload images to Cloudflare R2 (only if there are images)
-      const uploadedImageUrls = [];
+  //   try {
+  //     // First, upload images to Cloudflare R2 (only if there are images)
+  //     const uploadedImageUrls = [];
       
-      if (imageFiles.length > 0) {
-        for (let i = 0; i < imageFiles.length; i++) {
-          const file = imageFiles[i];
-          const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  //     if (imageFiles.length > 0) {
+  //       for (let i = 0; i < imageFiles.length; i++) {
+  //         const file = imageFiles[i];
+  //         const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
           
-          // Create a form just for this file
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('filename', filename);
+  //         // Create a form just for this file
+  //         const formData = new FormData();
+  //         formData.append('file', file);
+  //         formData.append('filename', filename);
           
-          // Get a presigned URL and upload to Cloudflare R2
-          const uploadResponse = await fetch('/api/upload-url', {
-            method: 'POST',
-            body: formData,
-          });
+  //         // Get a presigned URL and upload to Cloudflare R2
+  //         const uploadResponse = await fetch('/api/upload-url', {
+  //           method: 'POST',
+  //           body: formData,
+  //         });
           
-          if (!uploadResponse.ok) {
-            throw new Error(`Failed to upload image ${i + 1}`);
-          }
+  //         if (!uploadResponse.ok) {
+  //           throw new Error(`Failed to upload image ${i + 1}`);
+  //         }
           
-          const { imageUrl } = await uploadResponse.json();
-          uploadedImageUrls.push(imageUrl);
-        }
-      }
+  //         const { imageUrl } = await uploadResponse.json();
+  //         uploadedImageUrls.push(imageUrl);
+  //       }
+  //     }
       
-      // Now create the product with image URLs (or empty array if no images)
-      const productData = {
-        ...data,
-        images: uploadedImageUrls,
-        price: parseFloat(data.price),
-        stockQuantity: parseInt(data.stockQuantity),
-      };
+  //     // Now create the product with image URLs (or empty array if no images)
+  //     const productData = {
+  //       ...data,
+  //       images: uploadedImageUrls,
+  //       price: parseFloat(data.price),
+  //       stockQuantity: parseInt(data.stockQuantity),
+  //     };
       
-      // Call your API to save the product
-      const response = await fetch('/api/product/create-product', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productData),
-      });
+  //     // Call your API to save the product
+  //     const response = await fetch('/api/product/create-product', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(productData),
+  //     });
       
-      if (!response.ok) {
-        throw new Error('Failed to add product');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to add product');
+  //     }
       
-      const result = await response.json();
-      console.log('Product added successfully:', result);
+  //     const result = await response.json();
+  //     console.log('Product added successfully:', result);
       
-      // Add the new product to the list if it's in the current category
-      if (result.product.category === selectedCategory) {
-        setProducts(prev => [result.product, ...prev]);
-      }
+  //     // Add the new product to the list if it's in the current category
+  //     if (result.product.category === selectedCategory) {
+  //       setProducts(prev => [result.product, ...prev]);
+  //     }
       
-      // Close modal and reset form
-      setShowAddModal(false);
-      reset();
-      setImageFiles([]);
-      setImageUrls([]);
+  //     // Close modal and reset form
+  //     setShowAddModal(false);
+  //     reset();
+  //     setImageFiles([]);
+  //     setImageUrls([]);
       
-    } catch (error) {
-      console.error('Error adding product:', error);
-      alert('Error adding product: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error adding product:', error);
+  //     alert('Error adding product: ' + error.message);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
   
-  // Submit handler for edit product
-  const handleEditSubmit = async (data) => {
-    if (!currentProduct) return;
-    setIsSubmitting(true);
+  // // Submit handler for edit product
+  // const handleEditSubmit = async (data) => {
+  //   if (!currentProduct) return;
+  //   setIsSubmitting(true);
     
-    try {
-      // Similar handling for images as in add product
-      const uploadedImageUrls = [];
+  //   try {
+  //     // Similar handling for images as in add product
+  //     const uploadedImageUrls = [];
       
-      if (imageFiles.length > 0) {
-        for (let i = 0; i < imageFiles.length; i++) {
-          const file = imageFiles[i];
-          const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  //     if (imageFiles.length > 0) {
+  //       for (let i = 0; i < imageFiles.length; i++) {
+  //         const file = imageFiles[i];
+  //         const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
           
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('filename', filename);
+  //         const formData = new FormData();
+  //         formData.append('file', file);
+  //         formData.append('filename', filename);
           
-          const uploadResponse = await fetch('/api/upload-url', {
-            method: 'POST',
-            body: formData,
-          });
+  //         const uploadResponse = await fetch('/api/upload-url', {
+  //           method: 'POST',
+  //           body: formData,
+  //         });
           
-          if (!uploadResponse.ok) {
-            throw new Error(`Failed to upload image ${i + 1}`);
-          }
+  //         if (!uploadResponse.ok) {
+  //           throw new Error(`Failed to upload image ${i + 1}`);
+  //         }
           
-          const { imageUrl } = await uploadResponse.json();
-          uploadedImageUrls.push(imageUrl);
+  //         const { imageUrl } = await uploadResponse.json();
+  //         uploadedImageUrls.push(imageUrl);
+  //       }
+  //     }
+      
+  //     // Combine existing image URLs with newly uploaded ones
+  //     const allImageUrls = [...imageUrls.filter(url => !url.startsWith('blob:')), ...uploadedImageUrls];
+      
+  //     const productData = {
+  //       ...data,
+  //       images: allImageUrls,
+  //       price: parseFloat(data.price),
+  //       stockQuantity: parseInt(data.stockQuantity),
+  //     };
+      
+  //     const response = await fetch(`/api/product/${currentProduct.id}/edit`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(productData),
+  //     });
+      
+  //     if (!response.ok) {
+  //       throw new Error('Failed to update product');
+  //     }
+      
+  //     const result = await response.json();
+      
+  //     // Update the product in the list
+  //     setProducts(prev => prev.map(product => 
+  //       product.id === currentProduct.id ? result.product : product
+  //     ));
+      
+  //     // Close modal and reset
+  //     setShowEditModal(false);
+  //     setCurrentProduct(null);
+  //     reset();
+  //     setImageFiles([]);
+  //     setImageUrls([]);
+      
+  //   } catch (error) {
+  //     console.error('Error updating product:', error);
+  //     alert('Error updating product: ' + error.message);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+  // Submit handler for add product
+const handleAddSubmit = async (data) => {
+  setIsSubmitting(true);
+  
+  try {
+    // First, upload images to AWS S3 (only if there are images)
+    const uploadedImageUrls = [];
+    
+    if (imageFiles.length > 0) {
+      for (let i = 0; i < imageFiles.length; i++) {
+        const file = imageFiles[i];
+        const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+        
+        // Create a form just for this file
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('filename', filename);
+        
+        // Get a presigned URL and upload details from our API
+        const uploadResponse = await fetch('/api/upload-url', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error(`Failed to upload image ${i + 1}`);
         }
+        
+        const { presignedUrl, imageUrl, contentType } = await uploadResponse.json();
+        
+        // Use the presigned URL to upload directly to S3
+        const s3UploadResponse = await fetch(presignedUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': contentType,
+          },
+          body: file,
+        });
+        
+        if (!s3UploadResponse.ok) {
+          throw new Error(`Failed to upload image ${i + 1} to S3`);
+        }
+        
+        uploadedImageUrls.push(imageUrl);
       }
-      
-      // Combine existing image URLs with newly uploaded ones
-      const allImageUrls = [...imageUrls.filter(url => !url.startsWith('blob:')), ...uploadedImageUrls];
-      
-      const productData = {
-        ...data,
-        images: allImageUrls,
-        price: parseFloat(data.price),
-        stockQuantity: parseInt(data.stockQuantity),
-      };
-      
-      const response = await fetch(`/api/product/${currentProduct.id}/edit`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productData),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update product');
-      }
-      
-      const result = await response.json();
-      
-      // Update the product in the list
-      setProducts(prev => prev.map(product => 
-        product.id === currentProduct.id ? result.product : product
-      ));
-      
-      // Close modal and reset
-      setShowEditModal(false);
-      setCurrentProduct(null);
-      reset();
-      setImageFiles([]);
-      setImageUrls([]);
-      
-    } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Error updating product: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+    
+    // Now create the product with image URLs (or empty array if no images)
+    const productData = {
+      ...data,
+      images: uploadedImageUrls,
+      price: parseFloat(data.price),
+      stockQuantity: parseInt(data.stockQuantity),
+    };
+    
+    // Call your API to save the product
+    const response = await fetch('/api/product/create-product', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productData),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to add product');
+    }
+    
+    const result = await response.json();
+    console.log('Product added successfully:', result);
+    
+    // Add the new product to the list if it's in the current category
+    if (result.product.category === selectedCategory) {
+      setProducts(prev => [result.product, ...prev]);
+    }
+    
+    // Close modal and reset form
+    setShowAddModal(false);
+    reset();
+    setImageFiles([]);
+    setImageUrls([]);
+    
+  } catch (error) {
+    console.error('Error adding product:', error);
+    alert('Error adding product: ' + error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+// Submit handler for edit product
+const handleEditSubmit = async (data) => {
+  if (!currentProduct) return;
+  setIsSubmitting(true);
+  
+  try {
+    // Similar handling for images as in add product
+    const uploadedImageUrls = [];
+    
+    if (imageFiles.length > 0) {
+      for (let i = 0; i < imageFiles.length; i++) {
+        const file = imageFiles[i];
+        const filename = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('filename', filename);
+        
+        const uploadResponse = await fetch('/api/upload-url', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error(`Failed to upload image ${i + 1}`);
+        }
+        
+        const { presignedUrl, imageUrl, contentType } = await uploadResponse.json();
+        
+        // Upload directly to S3 using the presigned URL
+        const s3UploadResponse = await fetch(presignedUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': contentType,
+          },
+          body: file,
+        });
+        
+        if (!s3UploadResponse.ok) {
+          throw new Error(`Failed to upload image ${i + 1} to S3`);
+        }
+        
+        uploadedImageUrls.push(imageUrl);
+      }
+    }
+    
+    // Combine existing image URLs with newly uploaded ones
+    const allImageUrls = [...imageUrls.filter(url => !url.startsWith('blob:')), ...uploadedImageUrls];
+    
+    const productData = {
+      ...data,
+      images: allImageUrls,
+      price: parseFloat(data.price),
+      stockQuantity: parseInt(data.stockQuantity),
+    };
+    
+    const response = await fetch(`/api/product/${currentProduct.id}/edit`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productData),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update product');
+    }
+    
+    const result = await response.json();
+    
+    // Update the product in the list
+    setProducts(prev => prev.map(product => 
+      product.id === currentProduct.id ? result.product : product
+    ));
+    
+    // Close modal and reset
+    setShowEditModal(false);
+    setCurrentProduct(null);
+    reset();
+    setImageFiles([]);
+    setImageUrls([]);
+    
+  } catch (error) {
+    console.error('Error updating product:', error);
+    alert('Error updating product: ' + error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   
   // Get first image from product or placeholder
   const getProductImage = (product) => {

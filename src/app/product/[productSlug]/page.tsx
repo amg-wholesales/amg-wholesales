@@ -719,13 +719,11 @@ export default function ProductDetailPage() {
             <div className="lg:w-1/2 bg-gray-50 p-6 lg:p-8">
               <div className="aspect-square relative rounded-lg overflow-hidden mb-6 bg-white shadow-sm border border-gray-100">
                 {product.images?.length > 0 ? (
-                  <Image
+                  <img
                     src={product.images[selectedImage]}
                     alt={product.name || "Product image"}
-                    fill
                     sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-contain p-4"
-                    priority
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -745,10 +743,10 @@ export default function ProductDetailPage() {
                         selectedImage === index ? "border-indigo-500 ring-2 ring-indigo-200" : "border-gray-200"
                       }`}
                     >
-                      <Image
+                      <img
                         src={image}
                         alt={`${product.name} thumbnail ${index + 1}`}
-                        fill
+                        // fill
                         sizes="(max-width: 768px) 20vw, 10vw"
                         className="object-cover"
                       />
