@@ -1992,7 +1992,9 @@ import {
   Twitter,
   ArrowUp,
   Zap,
-  Search
+  Search,
+  X
+
 } from "lucide-react";
 
 // Hero slider images
