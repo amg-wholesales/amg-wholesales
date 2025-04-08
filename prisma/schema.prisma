@@ -15,12 +15,13 @@ model User {
   userType  String?  // "BUYER" or "ADMIN"
   createdAt DateTime? @default(now())
 
-  buyer     Buyer?
+  wholesaleBuyer WholesaleBuyer?
+  retailBuyer    RetailBuyer?
   purchaseRequests PurchaseRequest[]
   cart      Cart?
 }
 
-model Buyer {
+model WholesaleBuyer  {
   userId         String  @id @default(uuid()) @unique
   taxId          String?
   taxIdFile      String?
@@ -44,6 +45,7 @@ model Product {
   slug          String?
   category      String?
   price         Decimal?
+  retailPrice   Decimal? @default(15)
   availability  Boolean? @default(true)
   description   String?
   stockQuantity Int?     @default(0)
@@ -139,4 +141,17 @@ model TocItem {
   slug    String
   blog    Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
   blogId  String
+}
+
+model RetailBuyer {
+  userId         String  @id @default(uuid()) @unique
+  contactPerson  String?
+  cellPhone      String?
+  addressLine1   String?
+  city           String?
+  state          String?
+  zipCode        String?
+  notes          String?
+
+  user           User @relation(fields: [userId], references: [id])
 }

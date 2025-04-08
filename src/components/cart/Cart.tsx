@@ -517,7 +517,7 @@ export default function Cart({ onClose }) {
                 {/* Product Image */}
                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 relative">
                   {item.product.image ? (
-                    <Image
+                    <img
                       src={item.product.image}
                       alt={item.product.name}
                       fill

@@ -2808,7 +2808,7 @@ export default function HomePage() {
         />
         
         {/* Newsletter Section with luxury styling */}
-        <div className="bg-gradient-to-r from-indigo-800 to-indigo-900 rounded-2xl shadow-xl overflow-hidden mb-12 md:mb-20 backdrop-blur-sm">
+        {/* <div className="bg-gradient-to-r from-indigo-800 to-indigo-900 rounded-2xl shadow-xl overflow-hidden mb-12 md:mb-20 backdrop-blur-sm">
           <div className="relative">
             <div className="absolute inset-0 bg-pattern opacity-10"></div>
             <div className="p-6 md:p-10 lg:p-16 flex flex-col md:flex-row items-center justify-between relative z-10">
@@ -2840,7 +2840,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         
         {/* Social Proof Counter */}
         <div className="mb-12 md:mb-20 bg-white rounded-xl shadow-sm p-6 md:p-8 border border-gray-200">

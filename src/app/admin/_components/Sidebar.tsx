@@ -1,22 +1,30 @@
-// // components/Sidebar.jsx
+
 // "use client";
 
 // import { useState } from 'react';
 // import Link from 'next/link';
+// import { useRouter } from 'next/navigation';
 // import { usePathname } from 'next/navigation';
-// import { Menu, Home, Package,Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+// import { Menu, Home, Package, Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+// import { useAuth } from "@/context/authContext";
 
 // const Sidebar = () => {
 //   const [isOpen, setIsOpen] = useState(true);
 //   const pathname = usePathname();
+//   const router = useRouter();
+//   const { logout } = useAuth();
+  
+//   const handleLogout = () => {
+//     logout();
+//     router.push("/");
+//   };
   
 //   const menuItems = [
 //     { name: 'Home', icon: Home, path: '/' },
 //     { name: 'All Products', icon: Package, path: '/admin/dashboard/all_products' },
- 
 //     { name: 'Manage Blogs', icon: Book, path: '/admin/dashboard/blogs' },
 //     { name: 'Purchase Requests', icon: ShoppingCart, path: '/admin/dashboard/purchase_requests' },
-//     { name: 'Logout', icon: LogOut, path: '/logout' },
+//     { name: 'Logout', icon: LogOut, path: '#', onClick: handleLogout },
 //   ];
 
 //   const toggleSidebar = () => {
@@ -65,15 +73,25 @@
 //           <ul className="space-y-2">
 //             {menuItems.map((item) => (
 //               <li key={item.name}>
-//                 <Link
-//                   href={item.path}
-//                   className={`flex items-center p-3 mx-2 rounded-lg transition-colors hover:bg-gray-700 ${
-//                     isActive(item.path) ? 'bg-blue-600' : ''
-//                   }`}
-//                 >
-//                   <item.icon size={20} />
-//                   {isOpen && <span className="ml-4">{item.name}</span>}
-//                 </Link>
+//                 {item.onClick ? (
+//                   <button
+//                     onClick={item.onClick}
+//                     className={`flex items-center w-full text-left p-3 mx-2 rounded-lg transition-colors hover:bg-gray-700`}
+//                   >
+//                     <item.icon size={20} />
+//                     {isOpen && <span className="ml-4">{item.name}</span>}
+//                   </button>
+//                 ) : (
+//                   <Link
+//                     href={item.path}
+//                     className={`flex items-center p-3 mx-2 rounded-lg transition-colors hover:bg-gray-700 ${
+//                       isActive(item.path) ? 'bg-blue-600' : ''
+//                     }`}
+//                   >
+//                     <item.icon size={20} />
+//                     {isOpen && <span className="ml-4">{item.name}</span>}
+//                   </Link>
+//                 )}
 //               </li>
 //             ))}
 //           </ul>
@@ -95,21 +113,43 @@
 // };
 
 // export default Sidebar;
-
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-import { Menu, Home, Package, Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Menu, Home, Package, Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { useAuth } from "@/context/authContext";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
+  
+  // Check if mobile view on mount and when window resizes
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobileView(window.innerWidth < 768);
+      // Auto close sidebar on mobile
+      if (window.innerWidth < 768) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   const handleLogout = () => {
     logout();
@@ -142,28 +182,36 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile overlay */}
-      {isOpen && (
+      {isOpen && isMobileView && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden" 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={toggleSidebar}
+          aria-hidden="true"
         />
       )}
       
       {/* Sidebar */}
       <aside 
-        className={`fixed top-0 left-0 z-30 h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${
-          isOpen ? 'w-64' : 'w-20'
-        } flex flex-col`}
+        className={`fixed top-0 left-0 z-40 h-screen bg-gray-800 text-white transition-all duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : isMobileView ? '-translate-x-full' : 'w-20'
+        } ${isOpen && !isMobileView ? 'w-64' : 'w-64 md:w-20'}`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          {isOpen && <h2 className="text-xl font-bold">Dashboard</h2>}
-          <button 
-            onClick={toggleSidebar} 
-            className="p-2 rounded-lg hover:bg-gray-700"
-            aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
-          >
-            {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-          </button>
+          {(isOpen || !isMobileView) && (
+            <>
+              {isOpen && <h2 className="text-xl font-bold">Dashboard</h2>}
+              <button 
+                onClick={toggleSidebar} 
+                className="p-2 rounded-lg hover:bg-gray-700"
+                aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+              >
+                {isMobileView ? 
+                  <X size={20} /> : 
+                  isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />
+                }
+              </button>
+            </>
+          )}
         </div>
 
         <nav className="flex-1 py-4 overflow-y-auto">
@@ -184,6 +232,7 @@ const Sidebar = () => {
                     className={`flex items-center p-3 mx-2 rounded-lg transition-colors hover:bg-gray-700 ${
                       isActive(item.path) ? 'bg-blue-600' : ''
                     }`}
+                    onClick={isMobileView ? toggleSidebar : undefined}
                   >
                     <item.icon size={20} />
                     {isOpen && <span className="ml-4">{item.name}</span>}
@@ -196,9 +245,9 @@ const Sidebar = () => {
       </aside>
 
       {/* Mobile menu button */}
-      <div className="fixed top-4 left-4 z-10 md:hidden">
+      <div className="fixed top-4 left-4 z-20 md:hidden">
         <button 
-          className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+          className="p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
           onClick={toggleSidebar}
           aria-label="Toggle menu"
         >

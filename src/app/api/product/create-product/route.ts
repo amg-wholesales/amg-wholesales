@@ -1,3 +1,4 @@
+
 // import { NextResponse } from 'next/server';
 // import prisma from '@/lib/prisma';
 // import slugify from 'slugify';
@@ -6,8 +7,8 @@
 //   try {
 //     const data = await request.json();
     
-//     // Validate required fields
-//     if (!data.name || !data.category || !data.price || !data.images || data.images.length === 0) {
+//     // Validate required fields (removed images from required fields)
+//     if (!data.name || !data.category || !data.price) {
 //       return NextResponse.json(
 //         { error: 'Missing required fields' },
 //         { status: 400 }
@@ -31,7 +32,7 @@
 //         stockQuantity: data.stockQuantity || 0,
 //         description: data.description || '',
 //         availability: data.availability !== undefined ? data.availability : true,
-//         images: data.images,
+//         images: data.images || [],  // Default to empty array if no images
 //         tags: data.tags || [],
 //       },
 //     });
@@ -58,7 +59,7 @@ export async function POST(request) {
   try {
     const data = await request.json();
     
-    // Validate required fields (removed images from required fields)
+    // Validate required fields
     if (!data.name || !data.category || !data.price) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -73,17 +74,27 @@ export async function POST(request) {
       trim: true        // Trim leading/trailing spaces
     });
     
+    // Parse price values
+    const wholesalePrice = parseFloat(data.price);
+    
+    // Calculate retail price if not provided (15% markup by default)
+    let retailPrice = data.retailPrice ? parseFloat(data.retailPrice) : null;
+    if (!retailPrice && wholesalePrice) {
+      retailPrice = wholesalePrice * 1.15; // 15% markup
+    }
+    
     // Create new product in database
     const product = await prisma.product.create({
       data: {
         name: data.name,
         slug: slug,
         category: data.category,
-        price: data.price,
+        price: wholesalePrice,        // Wholesale price
+        retailPrice: retailPrice,     // Retail price
         stockQuantity: data.stockQuantity || 0,
         description: data.description || '',
         availability: data.availability !== undefined ? data.availability : true,
-        images: data.images || [],  // Default to empty array if no images
+        images: data.images || [],
         tags: data.tags || [],
       },
     });
