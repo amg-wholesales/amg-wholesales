@@ -2502,15 +2502,15 @@ export default function HomePage() {
       </button>
       
       {/* Search button (mobile) */}
-      <button 
+      {/* <button 
         onClick={() => setShowSearch(true)}
         className="fixed bottom-4 left-4 z-40 bg-indigo-600 text-white p-3 rounded-full shadow-lg md:hidden"
       >
         <Search className="w-6 h-6" />
-      </button>
+      </button> */}
       
       {/* Full-screen search overlay */}
-      {showSearch && (
+      {/* {showSearch && (
         <div className="fixed inset-0 bg-gray-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
           <div className="w-full max-w-2xl">
             <form onSubmit={handleSearch} className="relative">
@@ -2533,7 +2533,7 @@ export default function HomePage() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
       
       {/* Mobile floating menu */}
       <div className={`fixed bottom-20 right-4 z-40 bg-white rounded-xl shadow-xl p-4 transition-all duration-300 md:hidden ${
