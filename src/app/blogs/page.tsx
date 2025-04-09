@@ -121,7 +121,7 @@ const BlogsPage = () => {
   const fetchBlogs = async (page = 1) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/blogs?page=${page}&limit=9`);
+      const response = await fetch(`/api/get-blogs?page=${page}&limit=9`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
