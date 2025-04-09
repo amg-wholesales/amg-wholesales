@@ -827,13 +827,13 @@ export default function Navbar() {
               
               {/* Special Links */}
               <div className="flex space-x-4">
-                <Link href="/best-sellers" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
+                <Link href="/product/category/best-sellers" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
                   Best Sellers
                 </Link>
-                <Link href="/new-arrivals" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
+                <Link href="/product/category/new-arrivals" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
                   New Arrivals
                 </Link>
-                <Link href="/on-sale" className="px-2 py-3 text-sm font-medium text-red-500 hover:text-red-400 transition">
+                <Link href="/product/category/on-sale" className="px-2 py-3 text-sm font-medium text-red-500 hover:text-red-400 transition">
                   On Sale
                 </Link>
               </div>
@@ -949,21 +949,21 @@ export default function Navbar() {
                 <div className="mt-4">
                   <p className="text-sm uppercase tracking-widest mb-2 text-gray-500">Shop</p>
                   <Link 
-                    href="/best-sellers" 
+                    href="/product/category/best-sellers" 
                     className="block py-2 text-sm text-white hover:text-red-500"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Best Sellers
                   </Link>
                   <Link 
-                    href="/new-arrivals" 
+                    href="/product/category/new-arrivals" 
                     className="block py-2 text-sm text-white hover:text-red-500"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     New Arrivals
                   </Link>
                   <Link 
-                    href="/on-sale" 
+                    href="/product/category/on-sale" 
                     className="block py-2 text-sm text-red-500 hover:text-red-400"
                     onClick={() => setMobileMenuOpen(false)}
                   >
