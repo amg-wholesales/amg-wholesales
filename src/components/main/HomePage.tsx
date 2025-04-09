@@ -1999,9 +1999,9 @@ import {
 
 // Hero slider images
 const heroImages = [
-  "/home/CIGAR-DEAL-APRIL-2025-v02-6.jpg",
-  "/home/MONTECRISTO-WHITE-v01-2.jpg",
-  "/home/rocky-patel-v001-6.jpg",
+  "/home/banner1.jpg",
+  "/home/banner2.webp",
+  "/home/banner3.jpg",
 ];
 
 // Featured categories with enhanced icons

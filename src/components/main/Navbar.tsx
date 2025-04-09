@@ -70,7 +70,7 @@
 // export default function Navbar() {
 //   const router = useRouter();
 //   const pathname = usePathname();
-//   const { isAuthenticated, userEmail, userType, userId, logout } = useAuth();
+//   const { isAuthenticated, userEmail, userType, userId, logout, isWholesaleBuyer, isRetailBuyer } = useAuth();
   
 //   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 //   const [cartOpen, setCartOpen] = useState(false);
@@ -132,6 +132,13 @@
 //     setActiveDropdown(null);
 //   };
   
+//   // Get buyer type display text
+//   const getBuyerTypeDisplay = () => {
+//     if (isWholesaleBuyer) return "Wholesale Buyer";
+//     if (isRetailBuyer) return "Retail Buyer";
+//     return userType;
+//   };
+  
 //   return (
 //     <div className="bg-black text-white relative shadow-xl">
 //       {/* Top Bar */}
@@ -153,7 +160,7 @@
 //             {/* Contact Info & Cart Summary */}
 //             <div className="hidden md:flex items-center space-x-6">
 //               <div className="flex items-center space-x-2">
-//                 <a href="mailto:empiresmokedist@gmail.com" className="flex items-center text-gray-300 hover:text-white transition">
+//                 <a href="mailto:amgwholesales01@gmail.com" className="flex items-center text-gray-300 hover:text-white transition">
 //                   <Mail className="h-4 w-4 mr-1" />
 //                   <span className="text-sm">amgwholesales01@gmail.com</span>
 //                 </a>
@@ -176,9 +183,9 @@
 //                       <div className="py-1">
 //                         <div className="px-4 py-3 text-sm text-gray-300 border-b border-gray-800">
 //                           <p className="font-medium truncate">{userEmail}</p>
-//                           <p className="text-gray-500">{userType}</p>
+//                           <p className="text-gray-500">{getBuyerTypeDisplay()}</p>
 //                         </div>
-//                         {userType === 'BUYER' ? (
+//                         {isWholesaleBuyer || isRetailBuyer ? (
 //                           <>
 //                             <Link 
 //                               href="/user/profile" 
@@ -299,18 +306,15 @@
               
 //               {/* Special Links */}
 //               <div className="flex space-x-4">
-//                 <Link href="/best-sellers" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
+//                 <Link href="/product/category/best-sellers" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
 //                   Best Sellers
 //                 </Link>
-//                 <Link href="/new-arrivals" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
+//                 <Link href="/product/category/new-arrivals" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
 //                   New Arrivals
 //                 </Link>
-//                 <Link href="/on-sale" className="px-2 py-3 text-sm font-medium text-red-500 hover:text-red-400 transition">
+//                 <Link href="/product/category/on-sale" className="px-2 py-3 text-sm font-medium text-red-500 hover:text-red-400 transition">
 //                   On Sale
 //                 </Link>
-//                 {/* <Link href="/join-us" className="px-2 py-3 text-sm font-medium text-gray-300 hover:text-red-500 transition">
-//                   Join Us Now
-//                 </Link> */}
 //               </div>
 //             </div>
 //           </div>
@@ -322,9 +326,12 @@
 //                 {/* User Controls for Mobile */}
 //                 <div className="py-3 border-b border-gray-800 flex items-center justify-between">
 //                   {isAuthenticated ? (
-//                     <div className="flex items-center">
-//                       <User className="h-5 w-5 mr-2" />
-//                       <span className="text-sm truncate max-w-[200px]">{userEmail}</span>
+//                     <div className="flex flex-col">
+//                       <div className="flex items-center">
+//                         <User className="h-5 w-5 mr-2" />
+//                         <span className="text-sm truncate max-w-[200px]">{userEmail}</span>
+//                       </div>
+//                       <span className="text-xs text-gray-500 ml-7">{getBuyerTypeDisplay()}</span>
 //                     </div>
 //                   ) : (
 //                     <Link 
@@ -355,7 +362,7 @@
 //                 {isAuthenticated && (
 //                   <div className="mt-4 border-b border-gray-800 pb-4">
 //                     <p className="text-sm uppercase tracking-widest mb-2 text-gray-500">Account</p>
-//                     {userType === 'BUYER' ? (
+//                     {isWholesaleBuyer || isRetailBuyer ? (
 //                       <>
 //                         <Link 
 //                           href="/user/profile" 
@@ -421,41 +428,34 @@
 //                 <div className="mt-4">
 //                   <p className="text-sm uppercase tracking-widest mb-2 text-gray-500">Shop</p>
 //                   <Link 
-//                     href="/best-sellers" 
+//                     href="/product/category/best-sellers" 
 //                     className="block py-2 text-sm text-white hover:text-red-500"
 //                     onClick={() => setMobileMenuOpen(false)}
 //                   >
 //                     Best Sellers
 //                   </Link>
 //                   <Link 
-//                     href="/new-arrivals" 
+//                     href="/product/category/new-arrivals" 
 //                     className="block py-2 text-sm text-white hover:text-red-500"
 //                     onClick={() => setMobileMenuOpen(false)}
 //                   >
 //                     New Arrivals
 //                   </Link>
 //                   <Link 
-//                     href="/on-sale" 
+//                     href="/product/category/on-sale" 
 //                     className="block py-2 text-sm text-red-500 hover:text-red-400"
 //                     onClick={() => setMobileMenuOpen(false)}
 //                   >
 //                     On Sale
-//                   </Link>
-//                   <Link 
-//                     href="/join-us" 
-//                     className="block py-2 text-sm text-white hover:text-red-500"
-//                     onClick={() => setMobileMenuOpen(false)}
-//                   >
-//                     Join Us Now
 //                   </Link>
 //                 </div>
                 
 //                 {/* Contact Info for Mobile */}
 //                 <div className="mt-6 pt-4 border-t border-gray-800">
 //                   <p className="text-sm uppercase tracking-widest mb-2 text-gray-500">Contact</p>
-//                   <a href="mailto:empiresmokedist@gmail.com" className="block py-2 text-sm text-gray-400 hover:text-white">
+//                   <a href="mailto:amgwholesales01@gmail.com" className="block py-2 text-sm text-gray-400 hover:text-white">
 //                     <Mail className="h-4 w-4 inline mr-2" />
-//                     empiresmokedist@gmail.com
+//                     amgwholesales01@gmail.com
 //                   </a>
 //                   <a href="tel:+15168822888" className="block py-2 text-sm text-gray-400 hover:text-white">
 //                     <Phone className="h-4 w-4 inline mr-2" />
@@ -484,18 +484,9 @@
 //         </div>
 //       </nav>
       
-//       {/* Banner for Special Promotions/Announcements */}
-//       {/* <div className="bg-gradient-to-r from-red-700 to-red-500 py-2 text-center">
-//         <p className="text-sm font-medium text-white">CIGAR DEALS - Limited Time Offers!</p>
-//       </div> */}
-      
 //       {/* Cart Drawer */}
 //       {cartOpen && (
 //         <div className="fixed inset-0 overflow-hidden z-50">
-//           {/* Backdrop */}
-          
-          
-//           {/* Cart Panel */}
 //           <div className="absolute inset-y-0 right-0 max-w-full flex">
 //             <div className="relative w-screen max-w-md">
 //               <div className="h-full flex flex-col bg-gray-200 shadow-xl text-gray-800">
@@ -797,12 +788,23 @@ export default function Navbar() {
                     onMouseEnter={() => handleDropdownHover(category)}
                     onMouseLeave={handleDropdownLeave}
                   >
-                    <button className={`px-2 py-3 text-sm font-medium flex items-center space-x-1 hover:text-red-500 transition ${
-                      activeDropdown === category ? 'text-red-500' : 'text-gray-300'
-                    }`}>
-                      <span>{category}</span>
-                      {CATEGORIES[category].length > 0 && <ChevronDown className="h-4 w-4" />}
-                    </button>
+                    {CATEGORIES[category].length > 0 ? (
+                      // Category with subcategories (dropdown)
+                      <button className={`px-2 py-3 text-sm font-medium flex items-center space-x-1 hover:text-red-500 transition ${
+                        activeDropdown === category ? 'text-red-500' : 'text-gray-300'
+                      }`}>
+                        <span>{category}</span>
+                        <ChevronDown className="h-4 w-4" />
+                      </button>
+                    ) : (
+                      // Category without subcategories (direct link)
+                      <Link 
+                        href={`/product/category/${formatCategoryUrl(category)}`}
+                        className="px-2 py-3 text-sm font-medium flex items-center text-gray-300 hover:text-red-500 transition"
+                      >
+                        <span>{category}</span>
+                      </Link>
+                    )}
                     
                     {CATEGORIES[category].length > 0 && (
                       <div className={`absolute left-0 mt-0 w-56 rounded-b-md shadow-lg bg-gray-900 ring-1 ring-red-500 ring-opacity-20 transition-all duration-300 z-50 ${
@@ -926,20 +928,32 @@ export default function Navbar() {
                   <p className="text-sm uppercase tracking-widest mb-2 text-gray-500">Categories</p>
                   {Object.keys(CATEGORIES).map((category) => (
                     <div key={category} className="mb-2">
-                      <div className="font-medium text-white py-2 text-sm">{category}</div>
-                      {CATEGORIES[category].length > 0 && (
-                        <div className="pl-4 border-l border-gray-800">
-                          {CATEGORIES[category].map((subcategory) => (
-                            <Link 
-                              key={subcategory}
-                              href={`/product/category/${formatCategoryUrl(subcategory)}`}
-                              className="block py-2 text-sm text-gray-400 hover:text-white"
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              {subcategory}
-                            </Link>
-                          ))}
-                        </div>
+                      {CATEGORIES[category].length > 0 ? (
+                        // Category with subcategories
+                        <>
+                          <div className="font-medium text-white py-2 text-sm">{category}</div>
+                          <div className="pl-4 border-l border-gray-800">
+                            {CATEGORIES[category].map((subcategory) => (
+                              <Link 
+                                key={subcategory}
+                                href={`/product/category/${formatCategoryUrl(subcategory)}`}
+                                className="block py-2 text-sm text-gray-400 hover:text-white"
+                                onClick={() => setMobileMenuOpen(false)}
+                              >
+                                {subcategory}
+                              </Link>
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        // Category without subcategories (direct link)
+                        <Link 
+                          href={`/product/category/${formatCategoryUrl(category)}`}
+                          className="block font-medium text-white py-2 text-sm hover:text-red-500"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {category}
+                        </Link>
                       )}
                     </div>
                   ))}

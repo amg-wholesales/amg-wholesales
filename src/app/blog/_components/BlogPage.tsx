@@ -329,7 +329,7 @@ export default function BlogPage() {
           className="mb-8"
         >
           <Link 
-            href="/blog" 
+            href="/blogs" 
             className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
           >
             <ArrowLeft size={18} />
