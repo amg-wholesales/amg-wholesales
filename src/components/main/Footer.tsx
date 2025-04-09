@@ -144,17 +144,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/new-arrivals" className="text-gray-300 hover:text-red-500 transition">
+                <Link href="/products/category/new-arrivals" className="text-gray-300 hover:text-red-500 transition">
                   New Arrivals
                 </Link>
               </li>
               <li>
-                <Link href="/best-sellers" className="text-gray-300 hover:text-red-500 transition">
+                <Link href="/products/category/best-sellers" className="text-gray-300 hover:text-red-500 transition">
                   Best Sellers
                 </Link>
               </li>
               <li>
-                <Link href="/on-sale" className="text-gray-300 hover:text-red-500 transition">
+                <Link href="/products/category/on-sale" className="text-gray-300 hover:text-red-500 transition">
                   On Sale
                 </Link>
               </li>
