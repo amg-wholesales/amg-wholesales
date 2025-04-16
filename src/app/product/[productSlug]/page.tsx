@@ -23,13 +23,14 @@
 //   Truck, 
 //   Clock,
 //   ArrowUpRight,
-//   Loader
+//   Loader,
+//   Tag
 // } from "lucide-react";
 
 // export default function ProductDetailPage() {
 //   const { productSlug } = useParams();
 //   const router = useRouter();
-//   const { isAuthenticated, userType, userId } = useAuth();
+//   const { isAuthenticated, userType, userId, isWholesaleBuyer, isRetailBuyer } = useAuth();
   
 //   const [product, setProduct] = useState(null);
 //   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -43,6 +44,22 @@
 //   const [isFavorite, setIsFavorite] = useState(false);
 //   const [activeTab, setActiveTab] = useState('description');
 //   const [showShareMenu, setShowShareMenu] = useState(false);
+  
+//   // Function to get the appropriate price based on user type
+//   const getPrice = (product) => {
+//     if (!product) return null;
+    
+//     // For retail buyers, show retail price or calculate if not set
+//     if (isRetailBuyer) {
+//       return product.retailPrice || (product.price ? Number(product.price) * 1.15 : null);
+//     }
+    
+//     // For wholesale buyers and admins, show wholesale price
+//     return product.price;
+//   };
+  
+//   // Get the formatted price for display
+//   const displayPrice = product ? Number(getPrice(product)).toFixed(2) : null;
   
 //   useEffect(() => {
 //     const fetchProduct = async () => {
@@ -491,21 +508,38 @@
 //                   </div>
                   
 //                   <div className="flex items-center mb-6">
-//                     <div className="text-3xl font-bold text-indigo-600">
-//                       ${Number(product.price).toFixed(2)}
+//                     {/* Price type badge */}
+//                     <div className="flex flex-col">
+//                       <div className="flex items-center gap-2">
+//                         <div className="text-3xl font-bold text-indigo-600">
+//                           ${displayPrice}
+//                         </div>
+//                         {product.oldPrice && (
+//                           <div className="ml-3 text-lg text-gray-400 line-through">
+//                             ${Number(product.oldPrice).toFixed(2)}
+//                           </div>
+//                         )}
+                        
+//                         {/* Discount percentage */}
+//                         {product.oldPrice && (
+//                           <div className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded-md text-sm font-medium">
+//                             {Math.round(((product.oldPrice - getPrice(product)) / product.oldPrice) * 100)}% OFF
+//                           </div>
+//                         )}
+//                       </div>
+                      
+//                       {/* Price type indicator */}
+//                       <div className="flex items-center mt-1">
+//                         <Tag className="h-3 w-3 mr-1 text-gray-500" />
+//                         <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${
+//                           isRetailBuyer 
+//                             ? "bg-purple-50 text-purple-700"
+//                             : "bg-green-50 text-green-700"
+//                         }`}>
+//                           {isRetailBuyer ? "Retail Price" : "Wholesale Price"}
+//                         </span>
+//                       </div>
 //                     </div>
-//                     {product.oldPrice && (
-//                       <div className="ml-3 text-lg text-gray-400 line-through">
-//                         ${Number(product.oldPrice).toFixed(2)}
-//                       </div>
-//                     )}
-                    
-//                     {/* Discount percentage */}
-//                     {product.oldPrice && (
-//                       <div className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded-md text-sm font-medium">
-//                         {Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}% OFF
-//                       </div>
-//                     )}
 //                   </div>
                   
 //                   {/* Product Status */}
@@ -607,7 +641,30 @@
 //                             </div> */}
 //                           </div>
                           
-//                           {/* More product details can be added here */}
+//                           {/* Pricing details for each buyer type */}
+//                           <div className="bg-gray-50 p-4 rounded-lg">
+//                             <h4 className="text-sm font-medium text-gray-700 mb-2">Pricing</h4>
+//                             <div className="space-y-2">
+//                               <div className="flex justify-between text-sm">
+//                                 <span className="text-gray-600">Wholesale Price:</span>
+//                                 <span className="text-gray-900 font-medium">
+//                                   ${Number(product.price).toFixed(2)}
+//                                 </span>
+//                               </div>
+//                               <div className="flex justify-between text-sm">
+//                                 <span className="text-gray-600">Retail Price:</span>
+//                                 <span className="text-gray-900 font-medium">
+//                                   ${Number(product.retailPrice || (product.price * 1.15)).toFixed(2)}
+//                                 </span>
+//                               </div>
+//                               <div className="flex justify-between text-sm">
+//                                 <span className="text-gray-600">Your Price:</span>
+//                                 <span className="text-indigo-600 font-bold">
+//                                   ${displayPrice}
+//                                 </span>
+//                               </div>
+//                             </div>
+//                           </div>
 //                         </div>
 //                       </div>
 //                     )}
@@ -669,7 +726,9 @@
                         
 //                         <div className="mt-4 sm:mt-0 text-right">
 //                           <div className="text-sm font-medium text-gray-500 mb-1">Total Price</div>
-//                           <div className="text-2xl font-bold text-indigo-600">${(Number(product.price) * quantity).toFixed(2)}</div>
+//                           <div className="text-2xl font-bold text-indigo-600">
+//                             ${(Number(getPrice(product)) * quantity).toFixed(2)}
+//                           </div>
 //                         </div>
 //                       </div>
                       
@@ -841,7 +900,9 @@ import {
   Clock,
   ArrowUpRight,
   Loader,
-  Tag
+  Tag,
+  X,
+  Check
 } from "lucide-react";
 
 export default function ProductDetailPage() {
@@ -1096,12 +1157,12 @@ export default function ProductDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12 flex flex-col justify-center items-center min-h-screen bg-white text-gray-800">
         <div className="relative w-20 h-20">
-          <div className="absolute inset-0 animate-ping rounded-full bg-indigo-400 opacity-25"></div>
-          <div className="relative rounded-full w-20 h-20 flex items-center justify-center bg-white border-2 border-indigo-500">
-            <Loader className="h-8 w-8 animate-spin text-indigo-600" />
+          <div className="absolute inset-0 animate-ping rounded-full bg-black opacity-25"></div>
+          <div className="relative rounded-full w-20 h-20 flex items-center justify-center bg-white border-2 border-black">
+            <Loader className="h-8 w-8 animate-spin text-black" />
           </div>
         </div>
-        <p className="mt-6 text-indigo-600 font-medium">Loading product details...</p>
+        <p className="mt-6 text-black font-medium">Loading product details...</p>
       </div>
     );
   }
@@ -1120,7 +1181,7 @@ export default function ProductDetailPage() {
           </div>
           <Link 
             href="/product/category/all" 
-            className="inline-flex items-center text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg shadow-sm transition-colors"
+            className="inline-flex items-center text-white bg-black hover:bg-gray-900 px-4 py-2 rounded-lg shadow-sm transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Browse All Products
@@ -1135,12 +1196,12 @@ export default function ProductDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12 text-center bg-white text-gray-800">
         <div className="max-w-lg mx-auto">
-          <Info className="h-16 w-16 text-indigo-500 mx-auto mb-4" />
+          <Info className="h-16 w-16 text-black mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-4 text-gray-900">Product Not Found</h1>
           <p className="mb-6 text-gray-600">The product you are looking for does not exist or has been removed.</p>
           <Link 
             href="/product/category/all" 
-            className="inline-flex items-center text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg shadow-sm transition-colors"
+            className="inline-flex items-center text-white bg-black hover:bg-gray-900 px-4 py-2 rounded-lg shadow-sm transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Browse All Products
@@ -1151,40 +1212,40 @@ export default function ProductDetailPage() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800">
+    <div className="min-h-screen bg-white text-gray-800">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumbs */}
         <div className="mb-6">
           <div className="flex items-center text-sm text-gray-500">
-            <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+            <Link href="/" className="hover:text-black transition-colors">Home</Link>
             <ArrowRight size={12} className="mx-2" />
-            <Link href="/product/category/all" className="hover:text-indigo-600 transition-colors">Products</Link>
+            <Link href="/product/category/all" className="hover:text-black transition-colors">Products</Link>
             {product.category && (
               <>
                 <ArrowRight size={12} className="mx-2" />
                 <Link 
                   href={`/product/category/${formatCategory(product.category)}`}
-                  className="hover:text-indigo-600 transition-colors"
+                  className="hover:text-black transition-colors"
                 >
                   {product.category}
                 </Link>
               </>
             )}
             <ArrowRight size={12} className="mx-2" />
-            <span className="text-indigo-600 font-medium">{product.name}</span>
+            <span className="text-black font-medium">{product.name}</span>
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+        <div className="bg-white rounded-none border border-gray-200 overflow-hidden fade-in">
           <div className="flex flex-col lg:flex-row">
             {/* Product Images */}
-            <div className="lg:w-2/5 bg-gray-50 p-6 lg:p-8">
-              <div className="aspect-square relative rounded-xl overflow-hidden mb-6 bg-white shadow-sm border border-gray-100 flex items-center justify-center">
+            <div className="lg:w-3/5 bg-white p-6 lg:p-8">
+              <div className="aspect-square relative mb-6 bg-white flex items-center justify-center">
                 {product.images?.length > 0 ? (
                   <img
                     src={product.images[selectedImage]}
                     alt={product.name || "Product image"}
-                    className="object-contain max-h-full max-w-full p-4 transition-all duration-300 hover:scale-105"
+                    className="object-contain max-h-full max-w-full p-4 transition-all duration-700 hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
@@ -1196,8 +1257,8 @@ export default function ProductDetailPage() {
                 <div className="absolute top-4 right-4 flex flex-col gap-2">
                   <button 
                     onClick={toggleFavorite}
-                    className={`p-3 rounded-full backdrop-blur-sm ${
-                      isFavorite ? "bg-red-500/90 text-white" : "bg-white/90 text-gray-700 hover:text-red-500"
+                    className={`p-3 rounded-full ${
+                      isFavorite ? "bg-red-500 text-white" : "bg-white text-gray-700 hover:text-red-500"
                     } shadow-md transition-colors`}
                     aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                   >
@@ -1207,7 +1268,7 @@ export default function ProductDetailPage() {
                   <div className="relative">
                     <button 
                       onClick={() => setShowShareMenu(!showShareMenu)}
-                      className="p-3 rounded-full bg-white/90 text-gray-700 hover:text-indigo-500 shadow-md backdrop-blur-sm transition-colors"
+                      className="p-3 rounded-full bg-white text-gray-700 hover:text-black shadow-md transition-colors"
                       aria-label="Share product"
                     >
                       <Share2 className="w-5 h-5" />
@@ -1217,7 +1278,7 @@ export default function ProductDetailPage() {
                     {showShareMenu && (
                       <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg overflow-hidden z-10 border border-gray-200 animate-fadeIn">
                         <button 
-                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-50 transition-colors flex items-center"
+                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors flex items-center"
                           onClick={() => shareProduct('facebook')}
                         >
                           <span className="w-6 h-6 mr-2 flex items-center justify-center text-blue-600">
@@ -1228,7 +1289,7 @@ export default function ProductDetailPage() {
                           Facebook
                         </button>
                         <button 
-                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-50 transition-colors flex items-center"
+                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors flex items-center"
                           onClick={() => shareProduct('twitter')}
                         >
                           <span className="w-6 h-6 mr-2 flex items-center justify-center text-blue-400">
@@ -1239,7 +1300,7 @@ export default function ProductDetailPage() {
                           Twitter
                         </button>
                         <button 
-                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-50 transition-colors flex items-center"
+                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors flex items-center"
                           onClick={() => shareProduct('email')}
                         >
                           <span className="w-6 h-6 mr-2 flex items-center justify-center text-gray-600">
@@ -1250,7 +1311,7 @@ export default function ProductDetailPage() {
                           Email
                         </button>
                         <button 
-                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-50 transition-colors flex items-center"
+                          className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors flex items-center"
                           onClick={() => shareProduct('copy')}
                         >
                           <span className="w-6 h-6 mr-2 flex items-center justify-center text-gray-600">
@@ -1273,8 +1334,8 @@ export default function ProductDetailPage() {
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`aspect-square relative border-2 rounded-md overflow-hidden hover:opacity-90 transition ${
-                        selectedImage === index ? "border-indigo-500 ring-2 ring-indigo-200" : "border-gray-200"
+                      className={`aspect-square relative border-2 rounded-none overflow-hidden hover:opacity-90 transition ${
+                        selectedImage === index ? 'border-black' : 'border-gray-200'
                       }`}
                     >
                       <img
@@ -1289,7 +1350,7 @@ export default function ProductDetailPage() {
             </div>
             
             {/* Product Details */}
-            <div className="lg:w-3/5 p-6 lg:p-8 lg:border-l border-gray-200">
+            <div className="lg:w-2/5 p-6 lg:p-8 lg:border-l border-gray-200">
               {/* Only show if authenticated */}
               {isAuthenticated ? (
                 <>
@@ -1297,12 +1358,12 @@ export default function ProductDetailPage() {
                     {product.category && (
                       <Link 
                         href={`/product/category/${formatCategory(product.category)}`}
-                        className="inline-block mb-2 text-sm bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full hover:bg-indigo-100 transition-colors"
+                        className="inline-block mb-2 text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-none hover:bg-gray-200 transition-colors"
                       >
                         {product.category}
                       </Link>
                     )}
-                    <h1 className="text-3xl font-bold mb-2 text-gray-900">{product.name}</h1>
+                    <h1 className="text-3xl font-light mb-2 text-gray-900 tracking-tight">{product.name}</h1>
                     
                     {/* Product Rating */}
                     <div className="flex items-center mb-4">
@@ -1316,7 +1377,7 @@ export default function ProductDetailPage() {
                     {product.tags?.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {product.tags.map((tag, index) => (
-                          <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md">
+                          <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1">
                             {tag}
                           </span>
                         ))}
@@ -1328,7 +1389,7 @@ export default function ProductDetailPage() {
                     {/* Price type badge */}
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
-                        <div className="text-3xl font-bold text-indigo-600">
+                        <div className="text-3xl font-light text-black">
                           ${displayPrice}
                         </div>
                         {product.oldPrice && (
@@ -1339,7 +1400,7 @@ export default function ProductDetailPage() {
                         
                         {/* Discount percentage */}
                         {product.oldPrice && (
-                          <div className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded-md text-sm font-medium">
+                          <div className="ml-4 px-2 py-1 bg-black text-white text-sm">
                             {Math.round(((product.oldPrice - getPrice(product)) / product.oldPrice) * 100)}% OFF
                           </div>
                         )}
@@ -1348,11 +1409,7 @@ export default function ProductDetailPage() {
                       {/* Price type indicator */}
                       <div className="flex items-center mt-1">
                         <Tag className="h-3 w-3 mr-1 text-gray-500" />
-                        <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${
-                          isRetailBuyer 
-                            ? "bg-purple-50 text-purple-700"
-                            : "bg-green-50 text-green-700"
-                        }`}>
+                        <span className="text-xs font-medium px-2 py-0.5">
                           {isRetailBuyer ? "Retail Price" : "Wholesale Price"}
                         </span>
                       </div>
@@ -1373,19 +1430,19 @@ export default function ProductDetailPage() {
                     {/* Additional product benefits */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
                       <div className="flex items-center text-sm text-gray-600">
-                        <ShieldCheck className="h-4 w-4 mr-2 text-green-600" />
+                        <ShieldCheck className="h-4 w-4 mr-2 text-gray-600" />
                         Quality Guaranteed
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
-                        <Truck className="h-4 w-4 mr-2 text-indigo-600" />
+                        <Truck className="h-4 w-4 mr-2 text-gray-600" />
                         Fast Shipping Available
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="h-4 w-4 mr-2 text-amber-600" />
+                        <Clock className="h-4 w-4 mr-2 text-gray-600" />
                         24/7 Customer Support
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
-                        <ArrowUpRight className="h-4 w-4 mr-2 text-blue-600" />
+                        <ArrowUpRight className="h-4 w-4 mr-2 text-gray-600" />
                         Secure Checkout
                       </div>
                     </div>
@@ -1397,7 +1454,7 @@ export default function ProductDetailPage() {
                       <button
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                           activeTab === 'description' 
-                            ? 'border-indigo-600 text-indigo-600' 
+                            ? 'border-black text-black' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                         onClick={() => setActiveTab('description')}
@@ -1407,7 +1464,7 @@ export default function ProductDetailPage() {
                       <button
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                           activeTab === 'details' 
-                            ? 'border-indigo-600 text-indigo-600' 
+                            ? 'border-black text-black' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                         onClick={() => setActiveTab('details')}
@@ -1417,7 +1474,7 @@ export default function ProductDetailPage() {
                       <button
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                           activeTab === 'shipping' 
-                            ? 'border-indigo-600 text-indigo-600' 
+                            ? 'border-black text-black' 
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                         onClick={() => setActiveTab('shipping')}
@@ -1438,28 +1495,18 @@ export default function ProductDetailPage() {
                       <div className="animate-fadeIn">
                         <div className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* <div className="bg-gray-50 p-4 rounded-lg">
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">Product ID</h4>
-                              <p className="text-gray-900">{product.id || "N/A"}</p>
-                            </div> */}
-                            <div className="bg-gray-50 p-4 rounded-lg">
+                            <div className="bg-gray-50 p-4">
                               <h4 className="text-sm font-medium text-gray-700 mb-2">Category</h4>
                               <p className="text-gray-900">{product.category || "N/A"}</p>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
+                            <div className="bg-gray-50 p-4">
                               <h4 className="text-sm font-medium text-gray-700 mb-2">Stock</h4>
                               <p className="text-gray-900">{product.stockQuantity || "N/A"}</p>
                             </div>
-                            {/* <div className="bg-gray-50 p-4 rounded-lg">
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">Date Added</h4>
-                              <p className="text-gray-900">{product.createdAt 
-                                ? new Date(product.createdAt).toLocaleDateString() 
-                                : "N/A"}</p>
-                            </div> */}
                           </div>
                           
                           {/* Pricing details for each buyer type */}
-                          <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="bg-gray-50 p-4">
                             <h4 className="text-sm font-medium text-gray-700 mb-2">Pricing</h4>
                             <div className="space-y-2">
                               <div className="flex justify-between text-sm">
@@ -1476,7 +1523,7 @@ export default function ProductDetailPage() {
                               </div>
                               <div className="flex justify-between text-sm">
                                 <span className="text-gray-600">Your Price:</span>
-                                <span className="text-indigo-600 font-bold">
+                                <span className="text-black font-bold">
                                   ${displayPrice}
                                 </span>
                               </div>
@@ -1490,7 +1537,7 @@ export default function ProductDetailPage() {
                       <div className="animate-fadeIn">
                         <div className="space-y-4">
                           <div className="flex items-start">
-                            <Truck className="w-5 h-5 text-indigo-600 mr-3 mt-0.5" />
+                            <Truck className="w-5 h-5 text-gray-600 mr-3 mt-0.5" />
                             <div>
                               <h4 className="font-medium text-gray-900">Standard Shipping</h4>
                               <p className="text-gray-600 text-sm">2-5 business days</p>
@@ -1516,7 +1563,7 @@ export default function ProductDetailPage() {
                           <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
                             Quantity
                           </label>
-                          <div className="flex border border-gray-300 rounded-lg overflow-hidden shadow-sm w-32">
+                          <div className="flex border border-gray-300 overflow-hidden w-32">
                           <button 
                               onClick={decrementQuantity}
                               className="px-3 py-2 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors border-r border-gray-300"
@@ -1543,7 +1590,7 @@ export default function ProductDetailPage() {
                         
                         <div className="mt-4 sm:mt-0 text-right">
                           <div className="text-sm font-medium text-gray-500 mb-1">Total Price</div>
-                          <div className="text-2xl font-bold text-indigo-600">
+                          <div className="text-2xl font-light text-black">
                             ${(Number(getPrice(product)) * quantity).toFixed(2)}
                           </div>
                         </div>
@@ -1553,10 +1600,10 @@ export default function ProductDetailPage() {
                         <button
                           onClick={handleAddToCart}
                           disabled={isAddingToCart}
-                          className={`flex-1 py-3 px-6 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
+                          className={`flex-1 py-3 px-6 font-medium transition flex items-center justify-center gap-2 ${
                             isAddingToCart
-                              ? "bg-indigo-400 text-white cursor-wait"
-                              : "bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:shadow-lg"
+                              ? "bg-gray-400 text-white cursor-wait"
+                              : "bg-black text-white hover:bg-gray-900"
                           }`}
                         >
                           {isAddingToCart ? (
@@ -1575,10 +1622,10 @@ export default function ProductDetailPage() {
                         <button
                           onClick={handlePurchaseRequest}
                           disabled={purchaseRequested}
-                          className={`flex-1 py-3 px-6 rounded-lg font-medium transition ${
+                          className={`flex-1 py-3 px-6 font-medium transition ${
                             purchaseRequested
                               ? "bg-green-100 text-green-800 cursor-not-allowed"
-                              : "bg-gray-100 text-gray-800 hover:bg-gray-200 border border-gray-200"
+                              : "bg-white text-black hover:bg-gray-100 border border-black"
                           }`}
                         >
                           {purchaseRequested ? "Request Submitted" : "Request Purchase"}
@@ -1587,7 +1634,7 @@ export default function ProductDetailPage() {
                       
                       {/* Status message */}
                       {requestStatus.message && (
-                        <div className={`p-4 rounded-lg animate-fadeIn ${
+                        <div className={`p-4 animate-fadeIn ${
                           requestStatus.success ? "bg-green-50 text-green-800 border border-green-200" : "bg-red-50 text-red-800 border border-red-200"
                         }`}>
                           <div className="flex items-center">
@@ -1602,14 +1649,14 @@ export default function ProductDetailPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div className="bg-red-50 border border-red-200 p-4 mb-4">
                       <div className="flex items-start">
                         <AlertTriangle className="h-5 w-5 text-red-500 mr-3 mt-0.5" />
                         <div>
                           <h3 className="font-medium text-red-800">Out of Stock</h3>
                           <p className="text-red-700 text-sm">This product is currently unavailable.</p>
                           <button 
-                            className="mt-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                            className="mt-2 text-sm text-black hover:underline font-medium"
                             onClick={() => {
                               // Notify when back in stock functionality
                               alert("You'll be notified when this product is back in stock.");
@@ -1625,23 +1672,23 @@ export default function ProductDetailPage() {
               ) : (
                 <>
                   {/* Limited content for non-authenticated users */}
-                  <h1 className="text-3xl font-bold mb-2 text-gray-900">{product.name}</h1>
+                  <h1 className="text-3xl font-light mb-2 text-gray-900 tracking-tight">{product.name}</h1>
                   
                   {product.category && (
-                    <div className="mb-4 text-sm bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full inline-block">
+                    <div className="mb-4 text-sm bg-gray-100 text-gray-700 px-3 py-1 inline-block">
                       {product.category}
                     </div>
                   )}
                   
-                  <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-8 mb-6 text-center border border-indigo-100 shadow-sm mt-6">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                      <ShoppingBag className="h-8 w-8 text-indigo-600" />
+                  <div className="bg-gray-50 p-8 mb-6 text-center border border-gray-200 mt-6">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-200">
+                      <ShoppingBag className="h-8 w-8 text-black" />
                     </div>
                     <h3 className="text-xl font-medium mb-3 text-gray-900">Login to View Price and Details</h3>
                     <p className="text-gray-600 mb-6">Please login to see product details, pricing, and to make purchases.</p>
                     <button
                       onClick={() => router.push("/auth/user/login")}
-                      className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-3 px-8 rounded-lg font-medium hover:shadow-lg transition"
+                      className="bg-black text-white py-3 px-8 font-medium hover:bg-gray-900 transition uppercase tracking-wider text-sm"
                     >
                       Login to Continue
                     </button>
@@ -1654,19 +1701,18 @@ export default function ProductDetailPage() {
         
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-12">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Related Products</h2>
+          <div className="mt-16 mb-16 fade-in">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-light tracking-tight text-gray-900">Related Products</h2>
               <Link 
                 href={product.category ? `/product/category/${formatCategory(product.category)}` : "/product/category/all"}
-                className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                className="text-sm uppercase tracking-wider hover:underline flex items-center"
               >
-                View All
-                <ArrowRight className="h-4 w-4 ml-1" />
+                View All <ArrowRight size={14} className="ml-1" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {relatedProducts.slice(0, 4).map((relatedProduct) => (
                 <ProductCard 
                   key={relatedProduct.id} 
                   product={relatedProduct} 
@@ -1681,8 +1727,12 @@ export default function ProductDetailPage() {
       {/* CSS Animations */}
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
         }
         
         .animate-fadeIn {

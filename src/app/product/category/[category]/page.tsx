@@ -16,7 +16,10 @@
 //   Grid3X3, 
 //   LayoutList,
 //   AlertCircle,
-//   RefreshCw
+//   RefreshCw,
+//   ArrowUp,
+//   ArrowDown,
+//   ArrowUpDown
 // } from "lucide-react";
 
 // export default function CategoryPage() {
@@ -30,10 +33,25 @@
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const [priceRange, setPriceRange] = useState([0, 1000]);
 //   const [searchTerm, setSearchTerm] = useState("");
-//   const [viewMode, setViewMode] = useState("grid"); // grid or list
+//   const [viewMode, setViewMode] = useState("list"); // grid or list
 //   const [sortOption, setSortOption] = useState("featured"); // featured, price-low, price-high, newest
 //   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 //   const [activeFilters, setActiveFilters] = useState([]);
+//   const [showScrollTop, setShowScrollTop] = useState(false);
+  
+//   // Detect scroll position for "back to top" button
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       setShowScrollTop(window.scrollY > 500);
+//     };
+    
+//     window.addEventListener('scroll', handleScroll);
+//     return () => window.removeEventListener('scroll', handleScroll);
+//   }, []);
+  
+//   const scrollToTop = () => {
+//     window.scrollTo({ top: 0, behavior: "smooth" });
+//   };
   
 //   // Fetch products based on category, page, price filter, sorting
 //   useEffect(() => {
@@ -126,12 +144,19 @@
 //     return cat.replace(/-/g, " ");
 //   };
 
+//   // Sort icon based on current sort option
+//   const getSortIcon = () => {
+//     if (sortOption === 'price-low') return <ArrowUp size={16} />;
+//     if (sortOption === 'price-high') return <ArrowDown size={16} />;
+//     return <ArrowUpDown size={16} />;
+//   };
+
 //   return (
 //     <div className="bg-gray-50 min-h-screen">
 //       {/* Mobile sidebar backdrop */}
 //       {mobileSidebarOpen && (
 //         <div 
-//           className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden"
+//           className="fixed inset-0 bg-black bg-opacity-60 z-50 md:hidden backdrop-blur-sm transition-all duration-300"
 //           onClick={() => setMobileSidebarOpen(false)}
 //         />
 //       )}
@@ -143,12 +168,17 @@
 //           <ChevronRight size={16} className="mx-2 text-gray-400" />
 //           <a href="/products" className="hover:text-indigo-600 transition-colors">Products</a>
 //           <ChevronRight size={16} className="mx-2 text-gray-400" />
-//           <span className="font-medium text-gray-800 capitalize">{formatCategoryName(category)}</span>
+//           <span className="font-medium text-indigo-600 capitalize">{formatCategoryName(category)}</span>
 //         </nav>
         
 //         {/* Page Header */}
 //         <div className="mb-8 border-b border-gray-200 pb-6">
-//           <h1 className="text-3xl font-bold mb-3 capitalize text-gray-900">{formatCategoryName(category)}</h1>
+//           <h1 className="text-3xl font-bold mb-3 capitalize text-gray-900 flex items-center">
+//             <span className="bg-indigo-100 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+//               <span className="text-indigo-600 text-lg font-bold">{formatCategoryName(category).charAt(0).toUpperCase()}</span>
+//             </span>
+//             {formatCategoryName(category)}
+//           </h1>
 //           <p className="text-gray-600 max-w-3xl">Browse our collection of premium {formatCategoryName(category)} products. All items are carefully selected for quality and performance.</p>
 //         </div>
         
@@ -192,7 +222,7 @@
 //           <main className="lg:w-3/4 w-full">
 //             {/* Search and Filters Section */}
 //             <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 mb-6">
-//               <div className="p-5 border-b border-gray-200">
+//               <div className="p-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-gray-50">
 //                 <SearchBar onSearch={handleSearch} initialValue={searchTerm} />
 //               </div>
               
@@ -201,7 +231,7 @@
 //                 <div className="lg:hidden mb-4">
 //                   <button 
 //                     onClick={() => setMobileSidebarOpen(true)}
-//                     className="w-full flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 py-3 px-4 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition-colors"
+//                     className="w-full flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 py-3 px-4 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition-colors shadow-sm"
 //                   >
 //                     <Filter size={18} />
 //                     <span className="font-medium">Filter Products</span>
@@ -216,14 +246,14 @@
 //                       {activeFilters.map((filter, index) => (
 //                         <div 
 //                           key={index}
-//                           className="flex items-center bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm"
+//                           className="flex items-center bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm shadow-sm"
 //                         >
 //                           {filter.label}
 //                           <button 
 //                             onClick={filter.onRemove}
-//                             className="ml-2 text-indigo-600 hover:text-indigo-800"
+//                             className="ml-2 text-indigo-600 hover:text-indigo-800 bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center"
 //                           >
-//                             <X size={14} />
+//                             <X size={12} />
 //                           </button>
 //                         </div>
 //                       ))}
@@ -242,42 +272,48 @@
               
 //               {/* Sorting and View Options */}
 //               <div className="bg-gray-50 p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-//                 <div className="text-sm text-gray-600">
+//                 <div className="text-sm text-gray-600 font-medium">
 //                   {loading 
 //                     ? 'Loading products...' 
 //                     : products.length === 0 
 //                       ? 'No products found' 
-//                       : `Showing ${products.length} products`
+//                       : `Showing ${products.length} ${products.length === 1 ? 'product' : 'products'}`
 //                   }
 //                 </div>
                 
 //                 <div className="flex flex-wrap gap-3 items-center">
 //                   {/* Sort dropdown */}
 //                   <div className="relative">
-//                     <select
-//                       value={sortOption}
-//                       onChange={(e) => handleSortChange(e.target.value)}
-//                       className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-//                     >
-//                       <option value="featured">Featured</option>
-//                       <option value="price-low">Price: Low to High</option>
-//                       <option value="price-high">Price: High to Low</option>
-//                       <option value="newest">Newest First</option>
-//                     </select>
-//                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-//                       <SlidersHorizontal size={16} />
+//                     <div className="flex items-center">
+//                       <label htmlFor="sort-select" className="text-sm text-gray-600 mr-2 hidden sm:inline-block">Sort by:</label>
+//                       <div className="relative">
+//                         <select
+//                           id="sort-select"
+//                           value={sortOption}
+//                           onChange={(e) => handleSortChange(e.target.value)}
+//                           className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+//                         >
+//                           <option value="featured">Featured</option>
+//                           <option value="price-low">Price: Low to High</option>
+//                           <option value="price-high">Price: High to Low</option>
+//                           <option value="newest">Newest First</option>
+//                         </select>
+//                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+//                           {getSortIcon()}
+//                         </div>
+//                       </div>
 //                     </div>
 //                   </div>
                   
 //                   {/* View mode toggle */}
-//                   <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+//                   <div className="flex border border-gray-300 rounded-lg overflow-hidden shadow-sm">
 //                     <button
 //                       onClick={() => setViewMode("grid")}
 //                       className={`flex items-center justify-center p-2 ${
 //                         viewMode === "grid" 
-//                           ? "bg-indigo-50 text-indigo-600 border-r border-gray-300" 
+//                           ? "bg-indigo-500 text-white border-r border-indigo-600" 
 //                           : "bg-white text-gray-600 hover:bg-gray-50 border-r border-gray-300"
-//                       }`}
+//                       } transition-colors duration-200`}
 //                       aria-label="Grid view"
 //                     >
 //                       <Grid3X3 size={16} />
@@ -286,9 +322,9 @@
 //                       onClick={() => setViewMode("list")}
 //                       className={`flex items-center justify-center p-2 ${
 //                         viewMode === "list" 
-//                           ? "bg-indigo-50 text-indigo-600" 
+//                           ? "bg-indigo-500 text-white" 
 //                           : "bg-white text-gray-600 hover:bg-gray-50"
-//                       }`}
+//                       } transition-colors duration-200`}
 //                       aria-label="List view"
 //                     >
 //                       <LayoutList size={16} />
@@ -335,6 +371,7 @@
 //                   onClick={clearAllFilters}
 //                   className="inline-flex items-center px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm hover:shadow"
 //                 >
+//                   <RefreshCw size={16} className="mr-2" />
 //                   Clear All Filters
 //                 </button>
 //               </div>
@@ -353,12 +390,23 @@
 //           </main>
 //         </div>
 //       </div>
+      
+//       {/* Scroll to top button */}
+//       {showScrollTop && (
+//         <button
+//           onClick={scrollToTop}
+//           className="fixed bottom-6 right-6 bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-indigo-700 transition-all duration-300 z-20"
+//           aria-label="Scroll to top"
+//         >
+//           <ArrowUp size={20} />
+//         </button>
+//       )}
 //     </div>
 //   );
 // }
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import Sidebar from "@/components/category/Sidebar";
@@ -509,34 +557,34 @@ export default function CategoryPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Mobile sidebar backdrop */}
       {mobileSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 z-50 md:hidden backdrop-blur-sm transition-all duration-300"
+          className="fixed inset-0 bg-black bg-opacity-60 z-50 md:hidden transition-all duration-300"
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center text-sm text-gray-500 mb-6">
-          <a href="/" className="hover:text-indigo-600 transition-colors">Home</a>
-          <ChevronRight size={16} className="mx-2 text-gray-400" />
-          <a href="/products" className="hover:text-indigo-600 transition-colors">Products</a>
-          <ChevronRight size={16} className="mx-2 text-gray-400" />
-          <span className="font-medium text-indigo-600 capitalize">{formatCategoryName(category)}</span>
+        <nav className="flex items-center text-xs text-gray-500 mb-6">
+          <a href="/" className="hover:text-red-500 transition-colors">Home</a>
+          <ChevronRight size={14} className="mx-2 text-gray-400" />
+          <a href="/products" className="hover:text-red-500 transition-colors">Products</a>
+          <ChevronRight size={14} className="mx-2 text-gray-400" />
+          <span className="font-medium text-gray-900 capitalize">{formatCategoryName(category)}</span>
         </nav>
         
         {/* Page Header */}
-        <div className="mb-8 border-b border-gray-200 pb-6">
-          <h1 className="text-3xl font-bold mb-3 capitalize text-gray-900 flex items-center">
-            <span className="bg-indigo-100 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-              <span className="text-indigo-600 text-lg font-bold">{formatCategoryName(category).charAt(0).toUpperCase()}</span>
+        <div className="mb-8 border-b border-gray-100 pb-6">
+          <h1 className="text-2xl font-medium mb-3 capitalize text-gray-900 flex items-center">
+            <span className="bg-gray-100 w-8 h-8 rounded-full flex items-center justify-center mr-3">
+              <span className="text-gray-700 text-lg font-medium">{formatCategoryName(category).charAt(0).toUpperCase()}</span>
             </span>
             {formatCategoryName(category)}
           </h1>
-          <p className="text-gray-600 max-w-3xl">Browse our collection of premium {formatCategoryName(category)} products. All items are carefully selected for quality and performance.</p>
+          <p className="text-sm text-gray-600 max-w-3xl">Browse our collection of premium {formatCategoryName(category)} products. All items are carefully selected for quality and performance.</p>
         </div>
         
         {/* Main Content Area */}
@@ -578,8 +626,8 @@ export default function CategoryPage() {
           {/* Product Grid Area */}
           <main className="lg:w-3/4 w-full">
             {/* Search and Filters Section */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 mb-6">
-              <div className="p-5 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-gray-50">
+            <div className="bg-white border border-gray-100 mb-6">
+              <div className="p-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                 <SearchBar onSearch={handleSearch} initialValue={searchTerm} />
               </div>
               
@@ -588,9 +636,9 @@ export default function CategoryPage() {
                 <div className="lg:hidden mb-4">
                   <button 
                     onClick={() => setMobileSidebarOpen(true)}
-                    className="w-full flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 py-3 px-4 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition-colors shadow-sm"
+                    className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 px-4 hover:bg-gray-900 transition-colors text-xs"
                   >
-                    <Filter size={18} />
+                    <Filter size={16} />
                     <span className="font-medium">Filter Products</span>
                   </button>
                 </div>
@@ -599,27 +647,27 @@ export default function CategoryPage() {
                 {activeFilters.length > 0 && (
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-medium text-gray-700">Active Filters:</span>
+                      <span className="text-xs font-medium text-gray-700">Active Filters:</span>
                       {activeFilters.map((filter, index) => (
                         <div 
                           key={index}
-                          className="flex items-center bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm shadow-sm"
+                          className="flex items-center bg-gray-100 text-gray-700 px-3 py-1.5 rounded-sm text-xs"
                         >
                           {filter.label}
                           <button 
                             onClick={filter.onRemove}
-                            className="ml-2 text-indigo-600 hover:text-indigo-800 bg-indigo-100 rounded-full w-4 h-4 flex items-center justify-center"
+                            className="ml-2 text-gray-600 hover:text-gray-900 bg-gray-200 rounded-full w-4 h-4 flex items-center justify-center"
                           >
-                            <X size={12} />
+                            <X size={10} />
                           </button>
                         </div>
                       ))}
                       
                       <button 
                         onClick={clearAllFilters}
-                        className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline ml-2 flex items-center gap-1"
+                        className="text-xs text-red-500 hover:text-red-700 hover:underline ml-2 flex items-center gap-1"
                       >
-                        <RefreshCw size={14} />
+                        <RefreshCw size={12} />
                         Clear All
                       </button>
                     </div>
@@ -628,8 +676,8 @@ export default function CategoryPage() {
               </div>
               
               {/* Sorting and View Options */}
-              <div className="bg-gray-50 p-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="text-sm text-gray-600 font-medium">
+              <div className="bg-gray-50 p-4 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="text-xs text-gray-600 font-medium">
                   {loading 
                     ? 'Loading products...' 
                     : products.length === 0 
@@ -642,13 +690,13 @@ export default function CategoryPage() {
                   {/* Sort dropdown */}
                   <div className="relative">
                     <div className="flex items-center">
-                      <label htmlFor="sort-select" className="text-sm text-gray-600 mr-2 hidden sm:inline-block">Sort by:</label>
+                      <label htmlFor="sort-select" className="text-xs text-gray-600 mr-2 hidden sm:inline-block">Sort by:</label>
                       <div className="relative">
                         <select
                           id="sort-select"
                           value={sortOption}
                           onChange={(e) => handleSortChange(e.target.value)}
-                          className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                          className="appearance-none bg-white border border-gray-300 rounded text-xs px-3 py-2 pr-8 focus:outline-none"
                         >
                           <option value="featured">Featured</option>
                           <option value="price-low">Price: Low to High</option>
@@ -663,13 +711,13 @@ export default function CategoryPage() {
                   </div>
                   
                   {/* View mode toggle */}
-                  <div className="flex border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                  <div className="flex border border-gray-300 overflow-hidden">
                     <button
                       onClick={() => setViewMode("grid")}
                       className={`flex items-center justify-center p-2 ${
                         viewMode === "grid" 
-                          ? "bg-indigo-500 text-white border-r border-indigo-600" 
-                          : "bg-white text-gray-600 hover:bg-gray-50 border-r border-gray-300"
+                          ? "bg-black text-white" 
+                          : "bg-white text-gray-600 hover:bg-gray-50"
                       } transition-colors duration-200`}
                       aria-label="Grid view"
                     >
@@ -679,7 +727,7 @@ export default function CategoryPage() {
                       onClick={() => setViewMode("list")}
                       className={`flex items-center justify-center p-2 ${
                         viewMode === "list" 
-                          ? "bg-indigo-500 text-white" 
+                          ? "bg-black text-white" 
                           : "bg-white text-gray-600 hover:bg-gray-50"
                       } transition-colors duration-200`}
                       aria-label="List view"
@@ -693,19 +741,19 @@ export default function CategoryPage() {
             
             {/* Products Display */}
             {loading ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="bg-white border border-gray-100 p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {Array(8).fill().map((_, index) => (
                     <div key={index} className="animate-pulse">
-                      <div className="bg-gray-200 aspect-square rounded-lg mb-3"></div>
-                      <div className="h-4 bg-gray-200 rounded-lg w-3/4 mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded-lg w-1/2"></div>
+                      <div className="bg-gray-100 aspect-square mb-3"></div>
+                      <div className="h-4 bg-gray-100 w-3/4 mb-2"></div>
+                      <div className="h-4 bg-gray-100 w-1/2"></div>
                     </div>
                   ))}
                 </div>
               </div>
             ) : products.length > 0 ? (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div className="bg-white border border-gray-100 p-6">
                 <div className={`grid ${gridColsClass}`}>
                   {products.map((product) => (
                     <ProductCard 
@@ -718,17 +766,17 @@ export default function CategoryPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+              <div className="bg-white border border-gray-100 p-8 text-center">
                 <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <AlertCircle className="h-8 w-8 text-gray-400" />
                 </div>
                 <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
-                <p className="text-gray-500 mb-6">Try adjusting your filters or search terms</p>
+                <p className="text-gray-500 mb-6 text-sm">Try adjusting your filters or search terms</p>
                 <button
                   onClick={clearAllFilters}
-                  className="inline-flex items-center px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm hover:shadow"
+                  className="inline-flex items-center px-5 py-2.5 bg-black text-white hover:bg-gray-900 transition-colors text-xs font-medium"
                 >
-                  <RefreshCw size={16} className="mr-2" />
+                  <RefreshCw size={14} className="mr-2" />
                   Clear All Filters
                 </button>
               </div>
@@ -752,7 +800,7 @@ export default function CategoryPage() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-indigo-700 transition-all duration-300 z-20"
+          className="fixed bottom-6 right-6 bg-black text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-900 transition-all duration-300 z-20"
           aria-label="Scroll to top"
         >
           <ArrowUp size={20} />

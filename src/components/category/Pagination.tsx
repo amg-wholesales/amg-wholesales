@@ -50,59 +50,101 @@
 //   if (totalPages <= 1) return null;
   
 //   return (
-//     <div className="mt-8">
-//       <div className="flex flex-col items-center">
-//         <div className="flex items-center justify-center flex-wrap gap-2">
+//     <div className="mt-10">
+//       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+//         {/* Page information - Left aligned on desktop */}
+//         <div className="text-sm font-medium text-gray-500 order-2 md:order-1">
+//           Showing page <span className="text-indigo-600 font-semibold">{currentPage}</span> of <span className="font-semibold">{totalPages}</span>
+//         </div>
+        
+//         {/* Pagination controls - Centered, right aligned on desktop */}
+//         <div className="flex items-center justify-center md:justify-end order-1 md:order-2">
 //           {/* Previous page button */}
 //           <button
 //             onClick={() => onPageChange(currentPage - 1)}
 //             disabled={currentPage === 1}
-//             className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
+//             className={`flex items-center justify-center h-10 px-3 rounded-l-lg transition-all duration-200 ${
 //               currentPage === 1
 //                 ? "text-gray-300 cursor-not-allowed bg-gray-50"
-//                 : "text-gray-700 hover:bg-gray-100 border border-gray-300"
+//                 : "text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 border border-gray-200"
 //             }`}
 //             aria-label="Previous page"
 //           >
-//             <ChevronLeft size={18} />
+//             <ChevronLeft size={20} className="mr-1" />
+//             <span className="hidden sm:inline text-sm font-medium">Previous</span>
 //           </button>
           
 //           {/* Page numbers */}
-//           {pageNumbers.map((pageNumber, index) => (
-//             <button
-//               key={index}
-//               onClick={() => typeof pageNumber === "number" && onPageChange(pageNumber)}
-//               disabled={pageNumber === "..."}
-//               className={`flex items-center justify-center w-10 h-10 text-sm font-medium rounded-lg transition-colors ${
-//                 pageNumber === currentPage
-//                   ? "bg-blue-600 text-white border border-blue-600"
-//                   : pageNumber === "..."
-//                   ? "text-gray-400 cursor-default"
-//                   : "text-gray-700 hover:bg-gray-100 border border-gray-300"
-//               }`}
-//             >
-//               {pageNumber}
-//             </button>
-//           ))}
+//           <div className="hidden md:flex">
+//             {pageNumbers.map((pageNumber, index) => (
+//               <button
+//                 key={index}
+//                 onClick={() => typeof pageNumber === "number" && onPageChange(pageNumber)}
+//                 disabled={pageNumber === "..."}
+//                 className={`flex items-center justify-center w-10 h-10 text-sm font-medium transition-all duration-200 border-t border-b border-gray-200 ${
+//                   index === 0 ? "border-l" : ""
+//                 } ${
+//                   index === pageNumbers.length - 1 ? "border-r" : ""
+//                 } ${
+//                   pageNumber === currentPage
+//                     ? "bg-indigo-600 text-white border-indigo-600 z-10 relative shadow-sm"
+//                     : pageNumber === "..."
+//                     ? "text-gray-400 cursor-default"
+//                     : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
+//                 }`}
+//               >
+//                 {pageNumber}
+//               </button>
+//             ))}
+//           </div>
+          
+//           {/* Simplified mobile page indicator */}
+//           <div className="flex md:hidden items-center">
+//             <div className="px-4 h-10 flex items-center justify-center bg-gray-50 border-t border-b border-gray-200">
+//               <span className="text-sm font-semibold text-gray-700">{currentPage} / {totalPages}</span>
+//             </div>
+//           </div>
           
 //           {/* Next page button */}
 //           <button
 //             onClick={() => onPageChange(currentPage + 1)}
 //             disabled={currentPage === totalPages}
-//             className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors ${
+//             className={`flex items-center justify-center h-10 px-3 rounded-r-lg transition-all duration-200 ${
 //               currentPage === totalPages
 //                 ? "text-gray-300 cursor-not-allowed bg-gray-50"
-//                 : "text-gray-700 hover:bg-gray-100 border border-gray-300"
+//                 : "text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 border border-gray-200"
 //             }`}
 //             aria-label="Next page"
 //           >
-//             <ChevronRight size={18} />
+//             <span className="hidden sm:inline text-sm font-medium">Next</span>
+//             <ChevronRight size={20} className="ml-1" />
 //           </button>
 //         </div>
-        
-//         {/* Page information */}
-//         <div className="text-sm text-gray-500 mt-4">
-//           Showing page {currentPage} of {totalPages}
+//       </div>
+      
+//       {/* Quick jump to pages (desktop only) */}
+//       <div className="hidden lg:flex justify-center mt-4">
+//         <div className="flex items-center gap-2 text-sm text-gray-500">
+//           <span>Jump to:</span>
+//           <div className="flex gap-2">
+//             {[1, Math.floor(totalPages / 4), Math.floor(totalPages / 2), Math.floor(3 * totalPages / 4), totalPages]
+//               .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
+//               .sort((a, b) => a - b) // Ensure correct order
+//               .map((page, index) => (
+//                 <button
+//                   key={index}
+//                   onClick={() => onPageChange(page)}
+//                   disabled={page === currentPage}
+//                   className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+//                     page === currentPage
+//                       ? "bg-indigo-100 text-indigo-700 font-semibold"
+//                       : "hover:bg-gray-100"
+//                   }`}
+//                 >
+//                   {page}
+//                 </button>
+//               ))}
+//           </div>
 //         </div>
 //       </div>
 //     </div>
@@ -163,7 +205,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         {/* Page information - Left aligned on desktop */}
         <div className="text-sm font-medium text-gray-500 order-2 md:order-1">
-          Showing page <span className="text-indigo-600 font-semibold">{currentPage}</span> of <span className="font-semibold">{totalPages}</span>
+          Showing page <span className="text-black font-semibold">{currentPage}</span> of <span className="font-semibold">{totalPages}</span>
         </div>
         
         {/* Pagination controls - Centered, right aligned on desktop */}
@@ -175,7 +217,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
             className={`flex items-center justify-center h-10 px-3 rounded-l-lg transition-all duration-200 ${
               currentPage === 1
                 ? "text-gray-300 cursor-not-allowed bg-gray-50"
-                : "text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 border border-gray-200"
+                : "text-gray-600 hover:text-black hover:bg-gray-50 border border-gray-200"
             }`}
             aria-label="Previous page"
           >
@@ -196,10 +238,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                   index === pageNumbers.length - 1 ? "border-r" : ""
                 } ${
                   pageNumber === currentPage
-                    ? "bg-indigo-600 text-white border-indigo-600 z-10 relative shadow-sm"
+                    ? "bg-black text-white border-black z-10 relative"
                     : pageNumber === "..."
                     ? "text-gray-400 cursor-default"
-                    : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-700"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-black"
                 }`}
               >
                 {pageNumber}
@@ -221,7 +263,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
             className={`flex items-center justify-center h-10 px-3 rounded-r-lg transition-all duration-200 ${
               currentPage === totalPages
                 ? "text-gray-300 cursor-not-allowed bg-gray-50"
-                : "text-gray-600 hover:text-indigo-700 hover:bg-indigo-50 border border-gray-200"
+                : "text-gray-600 hover:text-black hover:bg-gray-50 border border-gray-200"
             }`}
             aria-label="Next page"
           >
@@ -246,7 +288,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                   disabled={page === currentPage}
                   className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
                     page === currentPage
-                      ? "bg-indigo-100 text-indigo-700 font-semibold"
+                      ? "bg-gray-100 text-black font-semibold"
                       : "hover:bg-gray-100"
                   }`}
                 >

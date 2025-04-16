@@ -1,3 +1,5 @@
+
+
 // 'use client'
 
 // import { useState } from 'react';
@@ -8,7 +10,8 @@
 // export default function UserLogin() {
 //   const [formData, setFormData] = useState({
 //     email: '',
-//     password: ''
+//     password: '',
+//     buyerType: 'WHOLESALE_BUYER'  // Default to wholesale buyer
 //   });
 //   const [error, setError] = useState('');
 //   const [isLoading, setIsLoading] = useState(false);
@@ -26,8 +29,8 @@
 //     setIsLoading(true);
 
 //     try {
-//       // Add userType to identify this as a buyer login
-//       const loginData = { ...formData, userType: 'BUYER' };
+//       // Add userType to identify this as a buyer login with specific buyer type
+//       const loginData = { ...formData, userType: formData.buyerType };
 //       const result = await login(loginData);
 
 //       if (result.success) {
@@ -90,6 +93,22 @@
 //                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
 //               />
 //             </div>
+
+//             <div>
+//               <label htmlFor="buyerType" className="block text-sm font-medium text-gray-700">
+//                 Account Type
+//               </label>
+//               <select
+//                 id="buyerType"
+//                 name="buyerType"
+//                 value={formData.buyerType}
+//                 onChange={handleChange}
+//                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+//               >
+//                 <option value="WHOLESALE_BUYER">Wholesale Buyer</option>
+//                 <option value="RETAIL_BUYER">Retail Buyer</option>
+//               </select>
+//             </div>
 //           </div>
           
 //           <div>
@@ -115,13 +134,13 @@
 //     </div>
 //   );
 // }
-
 'use client'
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/authContext';
+import { ArrowRight, LogIn, AlertTriangle } from 'lucide-react';
 
 export default function UserLogin() {
   const [formData, setFormData] = useState({
@@ -163,16 +182,26 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow">
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      {/* Breadcrumbs - Optional, add if needed */}
+      <div className="absolute top-8 left-8">
+        <div className="flex items-center text-sm text-gray-500">
+          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <ArrowRight size={12} className="mx-2" />
+          <span className="text-black font-medium">Login</span>
+        </div>
+      </div>
+      
+      <div className="w-full max-w-md p-8 space-y-8 bg-white border border-gray-200 shadow-sm fade-in">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Buyer Login</h1>
+          <h1 className="text-3xl font-light text-gray-900 tracking-tight">Buyer Login</h1>
           <p className="mt-2 text-gray-600">Sign in to access your account</p>
         </div>
         
         {error && (
-          <div className="p-3 text-sm text-red-800 bg-red-100 rounded-md">
-            {error}
+          <div className="p-4 text-sm text-red-800 bg-red-50 border border-red-200 flex items-center">
+            <AlertTriangle className="w-5 h-5 mr-2 text-red-500" />
+            <span>{error}</span>
           </div>
         )}
         
@@ -190,7 +219,7 @@ export default function UserLogin() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black text-gray-900"
               />
             </div>
             
@@ -206,7 +235,7 @@ export default function UserLogin() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black text-gray-900"
               />
             </div>
 
@@ -219,7 +248,7 @@ export default function UserLogin() {
                 name="buyerType"
                 value={formData.buyerType}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black text-gray-900"
               >
                 <option value="WHOLESALE_BUYER">Wholesale Buyer</option>
                 <option value="RETAIL_BUYER">Retail Buyer</option>
@@ -231,22 +260,48 @@ export default function UserLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium text-white bg-black hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50 uppercase tracking-wider"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? (
+                <span className="flex items-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign in
+                </span>
+              )}
             </button>
           </div>
         </form>
         
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link href="/auth/user/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Sign up
-            </Link>
-          </p>
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+          {/* <Link href="/auth/password-reset" className="text-sm text-gray-600 hover:text-black">
+            Forgot password?
+          </Link> */}
+          
+          <Link href="/auth/user/signup" className="text-sm font-medium text-black hover:underline">
+            Create account <ArrowRight size={14} className="inline ml-1" />
+          </Link>
         </div>
       </div>
+      
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
