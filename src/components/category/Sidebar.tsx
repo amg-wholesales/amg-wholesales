@@ -653,7 +653,7 @@ import {
 
 const CATEGORIES = [
   "ASHTRAY",
-  "CIGAR HOT",
+  "CIGAR ",
   "CIGAR BY BRAND NEW",
   "CIGAR ACCESSORIES",
   "ADULT NOVELTYHOT",
@@ -701,7 +701,7 @@ const CATEGORY_GROUPS = [
   {
     title: "Popular Categories",
     icon: <Flame size={18} className="text-red-500" />,
-    items: ["CIGAR HOT", "GLASS PIPES", "HOOKAHS", "KRATOM", "LIGHTERS"]
+    items: ["CIGAR", "GLASS PIPES", "HOOKAHS", "KRATOM", "LIGHTERS"]
   },
   {
     title: "Smoking Accessories",
@@ -754,7 +754,7 @@ const CATEGORY_GROUPS = [
     items: [
       "ADULT NOVELTYHOT",
       "BRANDED APPARELS & MERCHANDISE",
-      "DETOX + SYNTHETICSHOT",
+      "DETOX + SYNTHETICS",
       "GENERAL MERCHANDISE",
       "INCENSE + SCENTS + SPRAYS",
       "MEDICINE + ENERGY",
