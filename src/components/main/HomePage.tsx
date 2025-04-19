@@ -358,70 +358,73 @@ export default function HomePage() {
       )}
       
       {/* Hero Section */}
-      <section className="relative h-screen">
-        {heroImages.map((image, index) => (
-          <div 
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <div className="absolute inset-0 bg-black/30"></div>
-            <img
-              src={image}
-              alt={`Featured collection ${index + 1}`}
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
-        ))}
-        
-        {/* Hero content */}
-        <div className="absolute inset-0 flex items-center justify-center px-4 text-center">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-6 tracking-wide">
-              Discover Premium Collections
-            </h1>
-            <button 
-              onClick={() => router.push('/product/category/all')}
-              className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wider border border-white hover:bg-transparent hover:text-white transition-colors"
-            >
-              Shop Now
-            </button>
-          </div>
-        </div>
-        
-        {/* Hero slider navigation */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-6">
-          <button 
-            onClick={prevSlide}
-            className="text-white p-2 hover:text-gray-300 transition-colors"
-            aria-label="Previous slide"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          
-          <div className="flex space-x-3">
-            {heroImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  index === currentSlide ? "bg-white scale-100" : "bg-white/50 scale-75 hover:bg-white/70"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-          
-          <button 
-            onClick={nextSlide}
-            className="text-white p-2 hover:text-gray-300 transition-colors"
-            aria-label="Next slide"
-          >
-            <ArrowRight size={24} />
-          </button>
-        </div>
-      </section>
+    {/* Hero Section */}
+<section className="relative h-screen">
+  {heroImages.map((image, index) => (
+    <div 
+      key={index}
+      className={`absolute inset-0 transition-opacity duration-1000 ${
+        index === currentSlide ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <img
+        src={image}
+        alt={`Featured collection ${index + 1}`}
+        className="h-full w-full object-cover object-center"
+      />
+    </div>
+  ))}
+  
+  {/* Dark overlay - separate from the image container */}
+  <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
+  
+  {/* Hero content - with higher z-index */}
+  <div className="absolute inset-0 flex items-center justify-center px-4 text-center z-20">
+    <div className="max-w-3xl">
+      <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-6 tracking-wide">
+        Discover Premium Collections
+      </h1>
+      <button 
+        onClick={() => router.push('/product/category/all')}
+        className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wider border border-white hover:bg-transparent hover:text-white transition-colors"
+      >
+        Shop Now
+      </button>
+    </div>
+  </div>
+  
+  {/* Hero slider navigation - with higher z-index */}
+  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-6 z-20">
+    <button 
+      onClick={prevSlide}
+      className="text-white p-2 hover:text-gray-300 transition-colors"
+      aria-label="Previous slide"
+    >
+      <ArrowLeft size={24} />
+    </button>
+    
+    <div className="flex space-x-3">
+      {heroImages.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => setCurrentSlide(index)}
+          className={`w-2.5 h-2.5 rounded-full transition-all ${
+            index === currentSlide ? "bg-white scale-100" : "bg-white/50 scale-75 hover:bg-white/70"
+          }`}
+          aria-label={`Go to slide ${index + 1}`}
+        />
+      ))}
+    </div>
+    
+    <button 
+      onClick={nextSlide}
+      className="text-white p-2 hover:text-gray-300 transition-colors"
+      aria-label="Next slide"
+    >
+      <ArrowRight size={24} />
+    </button>
+  </div>
+</section>
       
       {/* Main content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
@@ -586,28 +589,7 @@ export default function HomePage() {
           />
         </section>
         
-        {/* Newsletter Section */}
-        {/* <section className="mt-24 border-t border-gray-200 pt-16">
-          <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-4">Stay Connected</h2>
-            <p className="text-gray-600 mb-8">Subscribe to receive updates on new arrivals, special offers and other discount information.</p>
-            
-            <form className="flex flex-col md:flex-row gap-4">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="flex-1 border border-gray-300 px-4 py-3 focus:outline-none focus:border-black"
-                required
-              />
-              <button 
-                type="submit"
-                className="bg-black text-white px-6 py-3 text-sm uppercase tracking-wider hover:bg-gray-900 transition-colors"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </section> */}
+       
         <section className="mt-24 border-t border-gray-200 pt-16">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-4">Stay Connected</h2>
@@ -656,67 +638,7 @@ export default function HomePage() {
 
       </main>
       
-      {/* Footer */}
-      {/* <footer className="bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-lg font-medium mb-4">Shop</h3>
-              <ul className="space-y-2">
-                <li><Link href="/product/category/all" className="text-gray-400 hover:text-white transition-colors">All Products</Link></li>
-                <li><Link href="/product/category/new-arrivals" className="text-gray-400 hover:text-white transition-colors">New Arrivals</Link></li>
-                <li><Link href="/product/category/best-sellers" className="text-gray-400 hover:text-white transition-colors">Best Sellers</Link></li>
-                <li><Link href="/product/category/on-sale" className="text-gray-400 hover:text-white transition-colors">On Sale</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-medium mb-4">Categories</h3>
-              <ul className="space-y-2">
-                {categories.slice(0, 4).map(category => (
-                  <li key={category.slug}>
-                    <Link 
-                      href={`/product/category/${category.slug}`}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-medium mb-4">Information</h3>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</Link></li>
-                <li><Link href="/shipping" className="text-gray-400 hover:text-white transition-colors">Shipping & Returns</Link></li>
-                <li><Link href="/faq" className="text-gray-400 hover:text-white transition-colors">FAQ</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-medium mb-4">Contact</h3>
-              <address className="text-gray-400 not-italic space-y-2">
-                <p>123 Main Street</p>
-                <p>New York, NY 10001</p>
-                <p className="mt-4">info@amgpremium.com</p>
-                <p>+1 (555) 123-4567</p>
-              </address>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">&copy; 2025 AMG Premium. All rights reserved.</p>
-            <div className="mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</Link>
-              <span className="mx-2 text-gray-600">|</span>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</Link>
-            </div>
-          </div>
-        </div>
-      </footer> */}
+    
 
       {/* Custom CSS */}
       <style jsx global>{`
