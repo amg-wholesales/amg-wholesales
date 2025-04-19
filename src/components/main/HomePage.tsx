@@ -284,7 +284,42 @@ export default function HomePage() {
       </div>
     );
   };
-  
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      // Reset state
+      setStatus('loading');
+      setMessage('');
+      
+      // API call to the newsletter endpoint
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      // Handle response
+      if (response.ok) {
+        setStatus('success');
+        setMessage('Thank you for subscribing!');
+        setEmail(''); // Reset form
+      } else {
+        const errorData = await response.text();
+        throw new Error(errorData || 'Something went wrong');
+      }
+    } catch (error) {
+      setStatus('error');
+      setMessage(error.message || 'Failed to subscribe. Please try again later.');
+    }
+  };
+
   return (
     <div className="bg-white">
       {/* Header - Fixed on scroll */}
@@ -512,9 +547,9 @@ export default function HomePage() {
                 <div className="max-w-2xl text-center">
                   <p className="text-lg md:text-xl italic mb-6">"{testimonial.text}"</p>
                   <div className="flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+                    {/* <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
                       <img src={testimonial.image} alt={testimonial.author} className="h-full w-full object-cover" />
-                    </div>
+                    </div> */}
                     <div className="text-left">
                       <p className="font-medium">{testimonial.author}</p>
                       <p className="text-sm text-gray-500">{testimonial.location}</p>
@@ -552,7 +587,7 @@ export default function HomePage() {
         </section>
         
         {/* Newsletter Section */}
-        <section className="mt-24 border-t border-gray-200 pt-16">
+        {/* <section className="mt-24 border-t border-gray-200 pt-16">
           <div className="max-w-xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-4">Stay Connected</h2>
             <p className="text-gray-600 mb-8">Subscribe to receive updates on new arrivals, special offers and other discount information.</p>
@@ -572,7 +607,53 @@ export default function HomePage() {
               </button>
             </form>
           </div>
-        </section>
+        </section> */}
+        <section className="mt-24 border-t border-gray-200 pt-16">
+      <div className="max-w-xl mx-auto text-center">
+        <h2 className="text-2xl md:text-3xl font-light tracking-tight mb-4">Stay Connected</h2>
+        <p className="text-gray-600 mb-8">Subscribe to receive updates on new arrivals, special offers and other discount information.</p>
+        
+        <form 
+          className="flex flex-col md:flex-row gap-4"
+          onSubmit={handleSubmit}
+        >
+          <input 
+            type="email" 
+            placeholder="Your email address" 
+            className="flex-1 border border-gray-300 px-4 py-3 focus:outline-none focus:border-black"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={status === 'loading'}
+          />
+          <button 
+            type="submit"
+            className={`${
+              status === 'loading' 
+                ? 'bg-gray-400' 
+                : 'bg-black hover:bg-gray-900'
+            } text-white px-6 py-3 text-sm uppercase tracking-wider transition-colors`}
+            disabled={status === 'loading'}
+          >
+            {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+          </button>
+        </form>
+
+        {/* Status message */}
+        {status === 'success' && (
+          <div className="mt-4 p-3 bg-green-50 text-green-800 rounded">
+            {message}
+          </div>
+        )}
+        
+        {status === 'error' && (
+          <div className="mt-4 p-3 bg-red-50 text-red-800 rounded">
+            {message}
+          </div>
+        )}
+      </div>
+    </section>
+
       </main>
       
       {/* Footer */}
