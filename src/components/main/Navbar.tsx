@@ -831,6 +831,12 @@ export default function Navbar() {
           
           {/* Header actions */}
           <div className="flex items-center space-x-6">
+          <Link 
+              href="/get-franchise" 
+              className="text-gray-700 hover:text-black transition-colors"
+            >
+              Get Franchise
+            </Link>
             <Link 
               href={isAuthenticated ? "/account/wishlist" : "/auth/user/login"} 
               className="hidden md:block text-gray-700 hover:text-black transition-colors"
@@ -857,6 +863,9 @@ export default function Navbar() {
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+            
+            {/* Get Franchise Link */}
+            
           </div>
         </div>
       </div>
