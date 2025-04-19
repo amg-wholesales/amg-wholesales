@@ -43,40 +43,127 @@ export async function POST(request) {
     });
 
     // Email content
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.FRANCHISE_EMAIL || process.env.EMAIL_USER, // Send to franchise team
-      subject: `New Franchise Inquiry from ${name}`,
-      text: `
-        Franchise Inquiry Details:
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: process.env.FRANCHISE_EMAIL || process.env.EMAIL_USER, // Send to franchise team
+    //   subject: `New Franchise Inquiry from ${name}`,
+    //   text: `
+    //     Franchise Inquiry Details:
         
-        Name: ${name}
-        Email: ${email}
-        Phone: ${phone}
-        Desired Location: ${location || 'Not specified'}
+    //     Name: ${name}
+    //     Email: ${email}
+    //     Phone: ${phone}
+    //     Desired Location: ${location || 'Not specified'}
         
-        Areas of Interest:
-        ${selectedInterests.length > 0 ? selectedInterests.join('\n') : 'None specified'}
+    //     Areas of Interest:
+    //     ${selectedInterests.length > 0 ? selectedInterests.join('\n') : 'None specified'}
         
-        Message:
-        ${message || 'No additional message provided'}
-      `,
-      html: `
-        <h2>New Franchise Inquiry</h2>
-        <p><strong>From:</strong> ${name}</p>
-        <p><strong>Contact:</strong> ${email} | ${phone}</p>
-        <p><strong>Desired Location:</strong> ${location || 'Not specified'}</p>
+    //     Message:
+    //     ${message || 'No additional message provided'}
+    //   `,
+    //   html: `
+    //     <h2>New Franchise Inquiry</h2>
+    //     <p><strong>From:</strong> ${name}</p>
+    //     <p><strong>Contact:</strong> ${email} | ${phone}</p>
+    //     <p><strong>Desired Location:</strong> ${location || 'Not specified'}</p>
         
-        <p><strong>Areas of Interest:</strong></p>
-        ${selectedInterests.length > 0 
-          ? `<ul>${selectedInterests.map(interest => `<li>${interest}</li>`).join('')}</ul>` 
-          : '<p>None specified</p>'}
+    //     <p><strong>Areas of Interest:</strong></p>
+    //     ${selectedInterests.length > 0 
+    //       ? `<ul>${selectedInterests.map(interest => `<li>${interest}</li>`).join('')}</ul>` 
+    //       : '<p>None specified</p>'}
         
-        <p><strong>Message:</strong></p>
-        <p>${message ? message.replace(/\n/g, '<br>') : 'No additional message provided'}</p>
-      `,
-    };
+    //     <p><strong>Message:</strong></p>
+    //     <p>${message ? message.replace(/\n/g, '<br>') : 'No additional message provided'}</p>
+    //   `,
+    // };
 
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+        subject: `New Franchise Inquiry from ${name} - ${location || 'Location TBD'}`,
+        text: `
+          NEW FRANCHISE INQUIRY
+          
+          CONTACT INFORMATION:
+          Name: ${name}
+          Email: ${email}
+          Phone: ${phone}
+          
+          BUSINESS DETAILS:
+          Desired Location: ${location || 'Not specified'}
+          
+          AREAS OF INTEREST:
+          ${selectedInterests.length > 0 ? selectedInterests.join('\n') : 'None specified'}
+          
+          MESSAGE:
+          ${message || 'No additional message provided'}
+          
+          ---
+          This inquiry was received on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}.
+          To respond, please contact the prospect directly or reply to this email.
+          Inquiry ID: ${Date.now()}
+        `,
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
+              .container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+              .header { background-color: #f5f5f5; padding: 15px; border-radius: 5px 5px 0 0; border-bottom: 3px solid #0056b3; }
+              h2 { color: #0056b3; margin-top: 0; }
+              .section { margin: 20px 0; }
+              .footer { font-size: 12px; color: #777; margin-top: 30px; padding-top: 10px; border-top: 1px solid #ddd; }
+              .highlight { background-color: #fafafa; padding: 15px; border-left: 4px solid #0056b3; }
+              ul { padding-left: 20px; }
+              .cta { background-color: #0056b3; color: white; padding: 10px 15px; text-decoration: none; border-radius: 3px; display: inline-block; }
+              .cta:hover { background-color: #003d7a; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>New Franchise Inquiry</h2>
+                <p>A new prospect has expressed interest in franchise opportunities</p>
+              </div>
+              
+              <div class="section">
+                <h3>Contact Information</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>
+              </div>
+              
+              <div class="section">
+                <h3>Business Details</h3>
+                <p><strong>Desired Location:</strong> ${location || 'Not specified'}</p>
+              </div>
+              
+              <div class="section">
+                <h3>Areas of Interest</h3>
+                ${selectedInterests.length > 0 
+                  ? `<ul>${selectedInterests.map(interest => `<li>${interest}</li>`).join('')}</ul>` 
+                  : '<p>None specified</p>'}
+              </div>
+              
+              <div class="section">
+                <h3>Message from Prospect</h3>
+                <div class="highlight">
+                  <p>${message ? message.replace(/\n/g, '<br>') : 'No additional message provided'}</p>
+                </div>
+              </div>
+              
+             
+              <div class="footer">
+                <p>This inquiry was received on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}.</p>
+               
+               </div>
+            </div>
+          </body>
+          </html>
+        `,
+      };
     // Send an acknowledgment email to the inquirer
     const acknowledgeOptions = {
       from: process.env.EMAIL_USER,

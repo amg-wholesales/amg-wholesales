@@ -72,7 +72,7 @@ const collections = [
     title: "Limited Editions",
     description: "Exclusive designs with limited availability",
     image: "/home/banner2.png",
-    link: "/collection/limited-editions"
+    link: "/collection/all"
   }
 ];
 

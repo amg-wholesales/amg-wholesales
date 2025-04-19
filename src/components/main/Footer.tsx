@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, Clock, Facebook, Instagram } from "lucide-react";
+import { Phone, Mail, Clock, Facebook, Instagram, } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -62,7 +62,7 @@ export default function Footer() {
                   className="text-gray-400 hover:text-gray-200 transition-colors"
                   aria-label="WhatsApp"
                 >
-                  <Instagram className="h-4 w-4" />
+                  <Phone className="h-4 w-4" />
                 </a>
                 <a 
                   href="https://instagram.com" 
