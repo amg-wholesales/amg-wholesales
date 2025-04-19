@@ -21,9 +21,9 @@ import {
 
 // Hero slider images
 const heroImages = [
-  "/home/banner1.jpg",
-  "/home/banner2.webp",
-  "/home/banner3.jpg",
+  "/home/hero1.webp",
+  "/home/hero2.jpg",
+  "/home/hero3.jpg",
 ];
 
 // Premium categories
@@ -65,13 +65,13 @@ const collections = [
   {
     title: "Premium Handcrafted",
     description: "Discover our collection of artisan pieces",
-    image: "/collections/handcrafted.jpg",
+    image: "/home/banner1.png",
     link: "/collection/premium-handcrafted"
   },
   {
     title: "Limited Editions",
     description: "Exclusive designs with limited availability",
-    image: "/collections/limited.jpg",
+    image: "/home/banner2.png",
     link: "/collection/limited-editions"
   }
 ];
@@ -502,7 +502,7 @@ export default function HomePage() {
           <div className="relative h-96 overflow-hidden group">
             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors z-10"></div>
             <img 
-              src="/home/label-banner-2-3.jpg" 
+              src="/home/selection.png" 
               alt="Premium Collection" 
               className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
             />
@@ -511,7 +511,7 @@ export default function HomePage() {
                 <h2 className="text-3xl md:text-4xl text-white font-light mb-4">Premium Selection</h2>
                 <p className="text-white/90 mb-6">Discover our handpicked collection of the finest products for enthusiasts.</p>
                 <Link 
-                  href="/product/category/premium"
+                  href="/product/category/all"
                   className="inline-block bg-white text-black px-8 py-3 text-sm uppercase tracking-wider hover:bg-transparent hover:text-white border border-white transition-colors"
                 >
                   Explore Now
