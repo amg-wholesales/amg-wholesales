@@ -826,7 +826,7 @@ export default function Navbar() {
               alt="AMG Wholesale" 
               className="h-8 w-auto"
             />
-            <span className="text-lg font-medium">AMG WHOLESALE</span>
+            <span className="text-lg font-medium">AMG WHOLESALES</span>
           </Link>
           
           {/* Header actions */}

@@ -16,7 +16,7 @@ export default function Footer() {
                 alt="AMG Wholesale" 
                 className="h-8 w-auto"
               />
-              <span className="text-lg font-medium text-gray-200">AMG WHOLESALE</span>
+              <span className="text-lg font-medium text-gray-200">AMG WHOLESALES</span>
             </Link>
             
             <div className="space-y-2">
@@ -194,7 +194,7 @@ export default function Footer() {
         
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400 text-xs">
-          <p>© {new Date().getFullYear()} AMG WHOLESALE. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} AMG WHOLESALES. All rights reserved.</p>
         </div>
       </div>
     </footer>
