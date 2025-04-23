@@ -571,7 +571,7 @@ export default function CategoryPage() {
         <nav className="flex items-center text-xs text-gray-500 mb-6">
           <a href="/" className="hover:text-red-500 transition-colors">Home</a>
           <ChevronRight size={14} className="mx-2 text-gray-400" />
-          <a href="/products/all" className="hover:text-red-500 transition-colors">Products</a>
+          <a href="/product/category/all" className="hover:text-red-500 transition-colors">Products</a>
           <ChevronRight size={14} className="mx-2 text-gray-400" />
           <span className="font-medium text-gray-900 capitalize">{formatCategoryName(category)}</span>
         </nav>
