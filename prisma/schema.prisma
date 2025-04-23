@@ -35,6 +35,7 @@ model WholesaleBuyer  {
   state          String?
   zipCode        String?
   notes          String?
+  verified       Boolean @default(false) 
 
   user           User @relation(fields: [userId], references: [id])
 }

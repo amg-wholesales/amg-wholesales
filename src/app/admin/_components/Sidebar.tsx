@@ -152,7 +152,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-import { Menu, Home, Package, Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft, X } from 'lucide-react';
+import { Menu, Home, Package,User, Book, Edit, ShoppingCart, LogOut, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { useAuth } from "@/context/authContext";
 
 const Sidebar = () => {
@@ -194,6 +194,7 @@ const Sidebar = () => {
     { name: 'All Products', icon: Package, path: '/admin/dashboard/all_products' },
     { name: 'Manage Blogs', icon: Book, path: '/admin/dashboard/blogs' },
     { name: 'Orders', icon: ShoppingCart, path: '/admin/dashboard/purchase_requests' },
+    { name: 'Account Requests', icon: User, path: '/admin/dashboard/wholesaler_verification' },
     { name: 'Logout', icon: LogOut, path: '#', onClick: handleLogout },
   ];
 
