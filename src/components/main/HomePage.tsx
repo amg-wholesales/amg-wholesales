@@ -20,9 +20,9 @@ import {
 
 // Hero media with support for both images and videos
 const heroMedia = [
-  { src: "/hero/hero.jpg", type: "image" },
-  { src: "/hero/banner.jpg", type: "image" },
-  { src: "/hero/video.mp4", type: "video" },
+  { src: "/logo/hero.jpg", type: "image" },
+  { src: "/logo/banner.jpg", type: "image" },
+  { src: "/logo/video.mp4", type: "video" },
 ];
 
 // Premium categories
