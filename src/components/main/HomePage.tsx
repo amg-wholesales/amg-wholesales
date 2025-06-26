@@ -20,12 +20,16 @@ import {
 } from "lucide-react";
 
 // Hero slider images
-const heroImages = [
-  "/home/hero1.webp",
-  "/home/hero2.jpg",
-  "/home/hero3.jpg",
-];
-
+// const heroImages = [
+//   "/home/hero1.webp",
+//   "/home/hero2.jpg",
+//   "/home/hero3.jpg",
+// ];
+ const heroMedia = [
+    { src: "/hero/hero.jpg", type: "image" },
+    { src: "/hero/banner.jpg", type: "image" },
+    { src: "/hero/video.mp4", type: "video" },
+  ];
 // Premium categories
 const categories = [
   { 
@@ -625,7 +629,7 @@ export default function HomePage() {
 <div className="bg-white">
   {/* Hero Section */}
   <section className="relative h-screen">
-    {heroImages.map((image, index) => (
+{/*     {heroImages.map((image, index) => (
       <div 
         key={index}
         className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -638,7 +642,34 @@ export default function HomePage() {
           className="h-full w-full object-cover object-center"
         />
       </div>
-    ))}
+    ))} */}
+     {heroMedia.map((media, index) => (
+  <div 
+    key={index}
+    className={`absolute inset-0 transition-opacity duration-1000 ${
+      index === currentSlide ? "opacity-100" : "opacity-0"
+    }`}
+  >
+    {media.type === "image" ? (
+      <img
+        src={media.src}
+        alt={`Featured collection ${index + 1}`}
+        className="h-full w-full object-cover object-center"
+      />
+    ) : (
+      <video
+        src={media.src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="h-full w-full object-cover object-center"
+      >
+        Your browser does not support the video tag.
+      </video>
+    )}
+  </div>
+))}
     
     {/* Dark overlay - separate from the image container */}
     <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
